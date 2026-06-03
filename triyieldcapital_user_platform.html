@@ -1,0 +1,2969 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriYieldCapital - Asset & Wealth Platform</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    /* Dark Mode Defaults */
+    html.dark body {
+      background: radial-gradient(circle at top right, #0b1528 0%, #030712 100%);
+      color: #f1f5f9;
+    }
+    html.dark .glass-panel {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    html.dark .themed-card {
+      background-color: rgba(15, 23, 42, 0.6);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+    html.dark .input-field {
+      background-color: rgba(3, 7, 18, 0.6);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+    }
+
+    /* Light Mode Defaults */
+    html.light body {
+      background: radial-gradient(circle at top right, #f8fafc 0%, #e2e8f0 100%);
+      color: #0f172a;
+    }
+    html.light .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+    html.light .themed-card {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-color: rgba(15, 23, 42, 0.06);
+    }
+    html.light .input-field {
+      background-color: #ffffff;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+
+    .gold-gradient-bg {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    }
+    .cyber-card {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .cyber-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent
+      );
+      transition: 0.5s;
+    }
+    .cyber-card:hover::before {
+      left: 100%;
+    }
+    .cyber-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(245, 158, 11, 0.3);
+      box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.15);
+    }
+    .glow-gold {
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+    }
+    .glow-blue {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+    }
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .animate-marquee {
+      animation: marquee 25s linear infinite;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(3, 7, 18, 0.05);
+    }
+    html.dark ::-webkit-scrollbar-track {
+      background: rgba(3, 7, 18, 0.9);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(245, 158, 11, 0.3);
+      border-radius: 9px;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-24 overflow-x-hidden">
+
+  <!-- TOAST ALERTS OVERLAY -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- FLOATING ADMIN SANDBOX SIMULATOR -->
+  <div id="admin-sandbox" class="fixed bottom-24 right-4 z-40">
+    <button onclick="toggleSandbox()" class="w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-2xl transition-transform active:scale-90 glow-blue" title="Open Admin Simulator Panel">
+      <i class="fa-solid fa-laptop-code text-lg"></i>
+    </button>
+    <div id="sandbox-panel" class="hidden absolute bottom-14 right-0 w-80 max-h-[80vh] overflow-y-auto glass-panel rounded-2xl p-4 border border-indigo-500/30 shadow-2xl text-xs space-y-4 text-slate-200 dark:text-slate-100">
+      <div class="flex justify-between items-center border-b border-indigo-500/20 pb-2">
+        <span class="font-extrabold text-indigo-400 uppercase tracking-widest"><i class="fa-solid fa-terminal mr-1"></i> Admin Simulator</span>
+        <button onclick="toggleSandbox()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div>
+        <p class="text-slate-400 mb-2">Since you are testing, use these options to manage simulated flow and bypass day restrictions:</p>
+        
+        <div class="space-y-3 bg-slate-950/80 p-3 rounded-xl border border-indigo-500/10">
+          <p class="font-bold text-slate-200">Session User: <span id="sandbox-username" class="text-yellow-500">Guest</span></p>
+          <div class="flex gap-2 flex-wrap">
+            <button onclick="sandboxAdjustBalance('depositBalance', 500)" class="flex-1 bg-green-600/20 hover:bg-green-600 text-green-400 hover:text-white py-1.5 px-2 rounded-lg font-bold transition-all">+ $500 Deposit</button>
+            <button onclick="sandboxAdjustBalance('bonusBalance', 100)" class="flex-1 bg-amber-600/20 hover:bg-amber-600 text-amber-400 hover:text-white py-1.5 px-2 rounded-lg font-bold transition-all">+ $100 Bonus</button>
+          </div>
+        </div>
+
+        <div class="space-y-2 mt-3 bg-slate-950/50 p-3 rounded-xl border border-slate-800">
+          <p class="font-bold text-slate-300">Override Settings</p>
+          <label class="flex items-center gap-2 cursor-pointer py-1">
+            <input type="checkbox" id="sandbox-override-days" class="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-0" checked>
+            <span class="text-[10px] text-slate-300">Allow Withdrawals on any day</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer py-1">
+            <input type="checkbox" id="sandbox-force-first-friday" class="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-0">
+            <span class="text-[10px] text-slate-300">Force Free Withdrawal Mode</span>
+          </label>
+        </div>
+
+        <div class="space-y-2 mt-3">
+          <p class="font-bold text-slate-300">Pending Transactions Queue</p>
+          <div id="sandbox-approvals-list" class="space-y-1 max-h-32 overflow-y-auto">
+            <p class="text-slate-500 italic text-center py-2">No pending transactions.</p>
+          </div>
+        </div>
+
+        <div class="space-y-2 mt-3">
+          <p class="font-bold text-slate-300">USD Exchange Rate</p>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400">1 USD =</span>
+            <input type="number" id="sandbox-rate-input" value="13" class="w-16 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-center text-yellow-500 focus:outline-none focus:border-indigo-500" onchange="updateGlobalRate(this.value)">
+            <span class="text-slate-400">GHS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTHENTICATION VIEW -->
+  <section id="auth-section" class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-lg glass-panel rounded-3xl p-6 md:p-8 shadow-2xl border relative z-10 transition-all">
+      
+      <!-- Logo Branding Header -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center p-4 bg-gradient-to-tr from-amber-500 to-yellow-400 rounded-2xl shadow-xl mb-4 text-slate-950">
+          <i class="fa-solid fa-chart-line text-3xl"></i>
+        </div>
+        <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-yellow-400 via-amber-200 to-blue-400 bg-clip-text text-transparent">
+          TriYieldCapital
+        </h1>
+        <p class="text-[10px] text-slate-400 tracking-widest mt-1.5 uppercase font-bold">SECURE PORTFOLIO MANAGEMENT SYSTEM</p>
+      </div>
+
+      <!-- TAB BUTTONS -->
+      <div class="flex bg-slate-950/60 dark:bg-slate-950/90 p-1.5 rounded-2xl mb-6 border border-slate-800">
+        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-yellow-500 text-slate-950">
+          Sign In
+        </button>
+        <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-3 rounded-xl font-bold text-sm text-slate-400 hover:text-slate-100 transition-all">
+          Register
+        </button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="login-form" class="space-y-4" onsubmit="handleLogin(event)">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Access Username / Email</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+              <i class="fa-regular fa-user"></i>
+            </span>
+            <input type="text" id="login-identifier" required placeholder="Your registered username" class="w-full input-field border focus:border-yellow-500 rounded-xl py-3 pl-11 pr-4 text-sm focus:outline-none transition-all">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Account password</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+              <i class="fa-solid fa-lock"></i>
+            </span>
+            <input type="password" id="login-password" required placeholder="••••••••" class="w-full input-field border focus:border-yellow-500 rounded-xl py-3 pl-11 pr-12 text-sm focus:outline-none transition-all">
+            <button type="button" onclick="togglePasswordVisibility('login-password', this)" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-200">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-slate-950 font-bold py-3.5 px-6 rounded-xl transition-all shadow-md mt-2 flex items-center justify-center gap-2">
+          <span>Connect Secure Vault</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </form>
+
+      <!-- REGISTRATION FORM -->
+      <form id="register-form" class="space-y-4 hidden" onsubmit="handleRegister(event)">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Full Name</label>
+            <input type="text" id="reg-name" required placeholder="John Doe" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Username</label>
+            <input type="text" id="reg-username" required placeholder="johndoe12" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Age (18+)</label>
+            <input type="number" id="reg-age" required min="18" max="100" placeholder="25" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Occupation</label>
+            <input type="text" id="reg-occupation" required placeholder="Freelancer" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Email Address</label>
+          <input type="email" id="reg-email" required placeholder="name@example.com" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Phone Contact Info</label>
+          <div class="grid grid-cols-12 gap-2">
+            <div class="col-span-4">
+              <input type="text" id="reg-phone-code" placeholder="+233" required class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-2 text-center text-sm font-semibold focus:outline-none transition-all text-yellow-500">
+            </div>
+            <div class="col-span-8">
+              <input type="tel" id="reg-phone" required placeholder="501234567" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Inviter Code (Optional)</label>
+          <input type="text" id="reg-ref" placeholder="Referral code" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
+        </div>
+
+        <!-- Password Confirmation Inputs -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Password</label>
+            <div class="relative">
+              <input type="password" id="reg-password" required placeholder="••••••••" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 pr-10 text-sm focus:outline-none transition-all">
+              <button type="button" onclick="togglePasswordVisibility('reg-password', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Confirm Password</label>
+            <div class="relative">
+              <input type="password" id="reg-password-confirm" required placeholder="••••••••" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 pr-10 text-sm focus:outline-none transition-all">
+              <button type="button" onclick="togglePasswordVisibility('reg-password-confirm', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-slate-950 font-bold py-3 px-6 rounded-xl transition-all shadow-md mt-2 flex items-center justify-center gap-2">
+          <span>Register Account</span>
+          <i class="fa-solid fa-user-plus text-xs"></i>
+        </button>
+      </form>
+
+      <!-- Support Details -->
+      <div class="border-t border-slate-800/80 mt-8 pt-6 space-y-4">
+        <div class="flex justify-between items-center text-xs text-slate-400 bg-slate-950/40 p-3.5 rounded-xl border border-slate-900">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-clock text-yellow-500"></i>
+            <div>
+              <p class="font-semibold text-slate-200">Customer Support Hours</p>
+              <p class="text-[10px]">Mon - Sat: 9:00am - 5:30pm GMT</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- USER DASHBOARD APP INTERFACE -->
+  <section id="app-section" class="hidden min-h-screen">
+    
+    <!-- Top Nav Header -->
+    <header class="glass-panel sticky top-0 z-30 px-4 py-3 border-b shadow-md transition-all">
+      <div class="max-w-xl mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <div class="p-1.5 bg-yellow-500 rounded-lg text-slate-950">
+            <i class="fa-solid fa-chart-line text-base animate-pulse"></i>
+          </div>
+          <span class="font-extrabold tracking-tight text-yellow-500 text-lg">TriYield</span>
+        </div>
+
+        <!-- Utility Bar -->
+        <div class="flex items-center gap-2.5">
+          <!-- Dark Mode Toggle Switch -->
+          <button onclick="toggleDarkMode()" class="p-2 text-slate-500 hover:text-slate-200 transition-all rounded-lg bg-slate-100 dark:bg-slate-900 text-xs flex items-center gap-1" title="Toggle Light/Dark Theme">
+            <i id="theme-toggle-icon" class="fa-solid fa-sun text-yellow-500"></i>
+          </button>
+
+          <!-- Notification Bell -->
+          <button onclick="openNotificationModal()" class="relative p-2 text-slate-400 hover:text-slate-200 transition-all bg-slate-100 dark:bg-slate-900 rounded-lg">
+            <i class="fa-regular fa-bell"></i>
+            <span id="notif-badge" class="hidden absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
+          </button>
+
+          <!-- Help Desk -->
+          <button onclick="openSupportModal()" class="p-2 text-slate-400 hover:text-slate-200 transition-all bg-slate-100 dark:bg-slate-900 rounded-lg flex items-center gap-1 text-xs">
+            <i class="fa-solid fa-headset text-yellow-500"></i>
+            <span class="hidden md:inline">Support</span>
+          </button>
+
+          <!-- User Identity Badge -->
+          <button onclick="openProfileModal()" class="w-8 h-8 rounded-xl bg-gradient-to-tr from-yellow-500 to-amber-500 text-slate-950 font-black flex items-center justify-center text-sm shadow">
+            <span id="user-avatar-text">U</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="max-w-xl mx-auto px-4 py-6 space-y-6">
+
+      <!-- TAB 1: HOME -->
+      <div id="tab-content-home" class="space-y-6 tab-pane">
+        
+        <!-- Big Premium Card -->
+        <div class="relative bg-gradient-to-br from-blue-950 to-slate-950 border border-blue-500/20 rounded-3xl p-6 overflow-hidden glow-blue">
+          <div class="absolute right-2 top-1/2 -translate-y-1/2 opacity-10 w-44 h-44 pointer-events-none">
+            <svg class="text-blue-500" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.66 0 3 1.34 3 3v2h1v5H8v-5h1v-2c0-1.66 1.34-3 3-3z"/>
+            </svg>
+          </div>
+
+          <div class="relative z-10 max-w-[85%]">
+            <h2 class="text-3xl font-black text-yellow-500 tracking-tight leading-none mb-1.5">TriYieldCapital</h2>
+            <p class="text-[10px] uppercase tracking-widest text-blue-300 font-extrabold">Decentralized Asset Allocation</p>
+            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+              Fully automated High-Yield investments linked dynamically to tangible commodity networks and cloud mining configurations.
+            </p>
+          </div>
+        </div>
+
+        <!-- Dynamic Announcement Marquee -->
+        <div class="bg-blue-950/40 border border-blue-900/40 rounded-xl p-3 flex items-center gap-3 text-xs overflow-hidden">
+          <i class="fa-solid fa-bullhorn text-yellow-500 animate-bounce"></i>
+          <div class="flex-1 overflow-hidden relative h-5">
+            <div class="absolute inset-0 whitespace-nowrap animate-marquee flex items-center">
+              <span id="ticker-text" class="text-slate-200 font-semibold">📢 Welcome Reward Activated: Create an asset plan or mining node to start generating daily dividends! Outflow gates are online.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTION BUTTONS -->
+        <div class="grid grid-cols-2 gap-4">
+          <button onclick="openDepositModal()" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-3 active:scale-95 group">
+            <div class="p-2.5 bg-white/10 rounded-xl">
+              <i class="fa-solid fa-circle-down text-lg"></i>
+            </div>
+            <div class="text-left">
+              <p class="text-[10px] text-blue-100 font-medium">Local / Crypto</p>
+              <p class="text-base font-black">Deposit</p>
+            </div>
+          </button>
+
+          <button onclick="openWithdrawModal()" class="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-slate-950 font-bold py-4 px-6 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-3 active:scale-95 group">
+            <div class="p-2.5 bg-slate-950/10 rounded-xl">
+              <i class="fa-solid fa-circle-up text-lg"></i>
+            </div>
+            <div class="text-left">
+              <p class="text-[10px] text-amber-950 font-medium">Fast Processing</p>
+              <p class="text-base font-black">Withdraw</p>
+            </div>
+          </button>
+        </div>
+
+        <!-- FEATURE UTILITY GRID -->
+        <div class="grid grid-cols-2 gap-3">
+          <!-- PRODUCTS REDIRECT -->
+          <div onclick="switchTab('activities'); toggleProductFilter('stake');" class="themed-card border rounded-2xl p-4 cursor-pointer hover:border-yellow-500/50 transition-all group">
+            <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-cubes text-xl"></i>
+            </div>
+            <h3 class="font-bold text-sm">Vault Staking</h3>
+            <p class="text-[10px] text-slate-400 mt-1">Staking contracts yielding compounding returns.</p>
+          </div>
+
+          <!-- ASSET PRODUCTS LINK -->
+          <div onclick="switchTab('activities'); toggleProductFilter('plan');" class="themed-card border rounded-2xl p-4 cursor-pointer hover:border-yellow-500/50 transition-all group">
+            <div class="w-10 h-10 rounded-xl bg-amber-600/20 text-amber-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-gem text-xl"></i>
+            </div>
+            <h3 class="font-bold text-sm">Asset Plans</h3>
+            <p class="text-[10px] text-slate-400 mt-1">Pre-allocated physical commodity configurations.</p>
+          </div>
+
+          <!-- MINING NODES LINK -->
+          <div onclick="switchTab('activities'); toggleProductFilter('mining');" class="themed-card border rounded-2xl p-4 cursor-pointer hover:border-yellow-500/50 transition-all group">
+            <div class="w-10 h-10 rounded-xl bg-teal-600/20 text-teal-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-terminal text-xl"></i>
+            </div>
+            <h3 class="font-bold text-sm">Mining Bots</h3>
+            <p class="text-[10px] text-slate-400 mt-1">High-performance algorithms mining daily.</p>
+          </div>
+
+          <!-- STATS & CALCULATOR -->
+          <div onclick="openCalcModal()" class="themed-card border rounded-2xl p-4 cursor-pointer hover:border-yellow-500/50 transition-all group">
+            <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-calculator text-xl"></i>
+            </div>
+            <h3 class="font-bold text-sm">Calculator</h3>
+            <p class="text-[10px] text-slate-400 mt-1">Estimate maturity cycles dynamically.</p>
+          </div>
+        </div>
+
+        <!-- PLATFORM STATISTICS & ANALYTICS -->
+        <div class="themed-card border rounded-3xl p-4 space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="font-extrabold text-xs text-slate-400 uppercase tracking-widest">📈 Market Rate Trends</h3>
+            <span class="text-[10px] text-green-400 bg-green-500/10 px-2.5 py-0.5 rounded font-bold">LIVE DATA</span>
+          </div>
+          <div class="h-44 relative">
+            <canvas id="yieldChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- TAB 2: RUNS & PRODUCTS -->
+      <div id="tab-content-activities" class="space-y-6 hidden tab-pane">
+        
+        <!-- Toggle Category: PRODUCTS vs Current Allocations -->
+        <div class="flex bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+          <button id="act-tab-products" onclick="toggleActivitySubTab('products')" class="flex-1 py-2.5 rounded-xl font-bold text-xs transition-all bg-yellow-500 text-slate-950">
+            PRODUCTS
+          </button>
+          <button id="act-tab-earns" onclick="toggleActivitySubTab('earns')" class="flex-1 py-2.5 rounded-xl font-bold text-xs text-slate-400 hover:text-white transition-all">
+            MY CURRENT RUNS
+          </button>
+        </div>
+
+        <!-- SUBTAB: PRODUCTS -->
+        <div id="act-sub-products" class="space-y-6">
+          <div class="grid grid-cols-3 gap-1.5">
+            <button id="btn-filter-stake" onclick="toggleProductFilter('stake')" class="py-2.5 rounded-xl text-[10px] font-bold bg-blue-600 text-white transition-all">LOCKED VAULT</button>
+            <button id="btn-filter-plan" onclick="toggleProductFilter('plan')" class="py-2.5 rounded-xl text-[10px] font-bold bg-slate-900 text-slate-400 hover:text-white transition-all">ASSETS PLANS</button>
+            <button id="btn-filter-mining" onclick="toggleProductFilter('mining')" class="py-2.5 rounded-xl text-[10px] font-bold bg-slate-900 text-slate-400 hover:text-white transition-all">MINING BOTS</button>
+          </div>
+
+          <!-- PRODUCTS: STAKE -->
+          <div id="prod-group-stake" class="space-y-4">
+            <div class="p-4 bg-blue-950/20 border border-blue-900/50 rounded-2xl text-xs space-y-1.5 text-slate-300">
+              <h4 class="font-extrabold text-blue-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-lock"></i> Locked Vault Pools
+              </h4>
+              <p>Allocate capital into long-term vault structures to claim compounded daily interest yields.</p>
+              <p class="text-[10px] text-yellow-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> Min: $100 | Max: $10,000</p>
+            </div>
+            <div class="space-y-3" id="stake-cards-list"></div>
+          </div>
+
+          <!-- PRODUCTS: ASSETS PLANS -->
+          <div id="prod-group-plan" class="space-y-4 hidden">
+            <div class="p-4 bg-amber-950/20 border border-amber-900/50 rounded-2xl text-xs space-y-1 text-slate-300">
+              <h4 class="font-extrabold text-yellow-500 flex items-center gap-1.5">
+                <i class="fa-solid fa-gem"></i> Premium Physical Assets
+              </h4>
+              <p>Commodity plans backing high-value infrastructure projects with stable daily outputs.</p>
+            </div>
+            <div class="space-y-3" id="purchase-plans-list"></div>
+          </div>
+
+          <!-- PRODUCTS: MINING BOTS -->
+          <div id="prod-group-mining" class="space-y-4 hidden">
+            <div class="p-4 bg-teal-950/20 border border-teal-900/50 rounded-2xl text-xs space-y-1.5 text-slate-300">
+              <h4 class="font-extrabold text-teal-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-terminal"></i> Decentralized Computing Miners
+              </h4>
+              <p>Establish persistent nodes requiring manual Daily Check-ins inside the dashboard to claim mined blocks.</p>
+            </div>
+            <div class="space-y-3" id="mining-cards-list"></div>
+          </div>
+        </div>
+
+        <!-- SUBTAB: MY CURRENT RUNS -->
+        <div id="act-sub-earns" class="space-y-6 hidden">
+          <!-- Balance allocations and Chart -->
+          <div class="themed-card border rounded-3xl p-5 space-y-4">
+            <h4 class="font-bold text-xs text-slate-400 uppercase tracking-widest">💰 Portfolio Allocation Breakdown</h4>
+            <div class="grid grid-cols-2 gap-3 text-center">
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-900">
+                <p class="text-[9px] text-teal-400 font-extrabold uppercase">Mined Vault</p>
+                <p class="text-lg font-black text-slate-100" id="earn-acc-mined">$0.00</p>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-900">
+                <p class="text-[9px] text-amber-500 font-extrabold uppercase">Asset Plans</p>
+                <p class="text-lg font-black text-slate-100" id="earn-acc-plan">$0.00</p>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-900">
+                <p class="text-[9px] text-blue-400 font-extrabold uppercase">Vault Staked</p>
+                <p class="text-lg font-black text-slate-100" id="earn-acc-stake">$0.00</p>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-900">
+                <p class="text-[9px] text-purple-400 font-extrabold uppercase">Bonus Wallet</p>
+                <p class="text-lg font-black text-slate-100" id="earn-acc-bonus">$0.00</p>
+              </div>
+            </div>
+            <div class="h-44 relative">
+              <canvas id="allocationChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Active Runs -->
+          <div class="space-y-3">
+            <h4 class="font-extrabold text-sm text-slate-400 uppercase tracking-wider">🏃 Active Allocations (<span id="active-pkg-count">0</span>)</h4>
+            <div id="active-packages-list" class="space-y-3"></div>
+          </div>
+
+          <!-- Expired Runs -->
+          <div class="space-y-3">
+            <h4 class="font-extrabold text-sm text-slate-500 uppercase tracking-wider">⏳ Expired Blocks</h4>
+            <div id="expired-packages-list" class="space-y-3 text-xs"></div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- TAB 3: CREW -->
+      <div id="tab-content-crew" class="space-y-6 hidden tab-pane">
+        
+        <!-- Invite system -->
+        <div class="themed-card border rounded-3xl p-5 space-y-4">
+          <h3 class="font-extrabold text-base text-yellow-500 flex items-center gap-1.5">
+            <i class="fa-solid fa-users-viewfinder"></i> Affiliate Link
+          </h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Share your network link to generate commissions. New user activities translate directly into liquid assets inside your profile.</p>
+          
+          <div class="relative bg-slate-950/85 rounded-xl border border-slate-800 p-4 pr-24 flex items-center overflow-x-auto select-all">
+            <span id="referral-link-display" class="text-xs text-yellow-500 font-semibold whitespace-nowrap">https://www.TriYieldCapital.com?ref=username</span>
+            <button onclick="copyReferralLink()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition-all">
+              Copy Link
+            </button>
+          </div>
+        </div>
+
+        <!-- Referral Tier Tracking -->
+        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+          <div class="bg-blue-950/20 border border-blue-900/30 p-3 rounded-2xl">
+            <p class="text-2xl font-black text-blue-400" id="crew-count-a">0</p>
+            <p class="font-bold text-slate-400 text-[9px] mt-1 uppercase">Tier A (10%)</p>
+          </div>
+          <div class="bg-purple-950/20 border border-purple-900/30 p-3 rounded-2xl">
+            <p class="text-2xl font-black text-purple-400" id="crew-count-b">0</p>
+            <p class="font-bold text-slate-400 text-[9px] mt-1 uppercase">Tier B (5%)</p>
+          </div>
+          <div class="bg-teal-950/20 border border-teal-900/30 p-3 rounded-2xl">
+            <p class="text-2xl font-black text-teal-400" id="crew-count-c">0</p>
+            <p class="font-bold text-slate-400 text-[9px] mt-1 uppercase">Tier C (2%)</p>
+          </div>
+        </div>
+
+        <div class="themed-card border rounded-3xl p-5 flex justify-between items-center text-xs">
+          <div>
+            <p class="text-slate-400 font-bold">Accumulated Affiliate Dividends</p>
+            <p class="text-2xl font-black text-green-400 mt-1" id="crew-bonus-total">$0.00</p>
+          </div>
+        </div>
+
+        <!-- Members -->
+        <div class="space-y-3">
+          <h4 class="font-extrabold text-sm uppercase tracking-wider">👥 Affiliated Partners Tree</h4>
+          <div id="referred-partners-list" class="space-y-2 bg-slate-950/50 rounded-2xl border border-slate-900 p-6 text-center text-xs text-slate-500">
+            No active partners linked yet.
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- TAB 4: TRANSACTION LEDGER -->
+      <div id="tab-content-transactions" class="space-y-6 hidden tab-pane">
+        <div class="flex justify-between items-center">
+          <h3 class="font-extrabold text-base text-yellow-500 uppercase tracking-wider">📊 Personal Audit Logs</h3>
+          <button onclick="loadUserTransactions()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
+            <i class="fa-solid fa-rotate-right"></i> Sync Ledger
+          </button>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <button id="tx-filter-all" onclick="filterTransactions('all')" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-yellow-500 text-slate-950 transition-all">All</button>
+          <button id="tx-filter-deposit" onclick="filterTransactions('deposit')" class="flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition-all">Deposits</button>
+          <button id="tx-filter-withdrawal" onclick="filterTransactions('withdrawal')" class="flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition-all">Cashout</button>
+          <button id="tx-filter-purchase" onclick="filterTransactions('purchase')" class="flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition-all">Locks</button>
+        </div>
+
+        <div id="transaction-logs-list" class="space-y-3">
+          <p class="text-xs text-slate-500 text-center py-12">Checking secure transaction logs...</p>
+        </div>
+      </div>
+
+
+      <!-- TAB 5: ASSETS -->
+      <div id="tab-content-assets" class="space-y-6 hidden tab-pane">
+        
+        <!-- Asset Overview card -->
+        <div class="bg-gradient-to-tr from-slate-900 to-blue-950 border border-blue-900/30 rounded-3xl p-6 space-y-4 shadow-xl text-slate-100">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-xs text-blue-300 font-bold uppercase tracking-wider">TOTAL BALANCE (USD)</p>
+              <h3 class="text-3xl font-black text-white mt-1" id="asset-total-balance">$0.00</h3>
+            </div>
+            <i class="fa-solid fa-wallet text-3xl text-yellow-500"></i>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-800/60 text-xs">
+            <div>
+              <p class="text-slate-400">Available Payout Funds</p>
+              <p class="text-base font-black text-green-400 mt-0.5" id="asset-withdrawable-balance">$0.00</p>
+            </div>
+            <div>
+              <p class="text-slate-400">Locked / Bonuses</p>
+              <p class="text-base font-black text-yellow-500 mt-0.5" id="asset-bonus-balance">$0.00</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bound wallets -->
+        <div class="themed-card border rounded-3xl p-5 space-y-4">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-sm">💳 Bound Payout Options</h4>
+            <span class="text-[10px] bg-slate-950 border border-slate-800 px-2.5 py-0.5 rounded text-yellow-500 font-extrabold" id="wallet-count-badge">0 / 2 Binded</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">Ensure bound mobile numbers or wallet network criteria are accurate.</p>
+
+          <div id="bound-wallets-display" class="space-y-2 text-xs"></div>
+
+          <button id="btn-add-wallet-open" onclick="openAddWalletModal()" class="w-full bg-slate-950 border border-slate-800 hover:border-yellow-500 text-yellow-500 font-bold py-3 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-plus text-[10px]"></i> Link Outflow Route
+          </button>
+        </div>
+
+        <!-- Security settings -->
+        <div class="themed-card border rounded-3xl p-5 space-y-4 text-xs">
+          <h4 class="font-bold text-sm">🛡️ Inactivity Security Controls</h4>
+
+          <div class="flex justify-between items-center py-1">
+            <div>
+              <p class="font-bold">Auto-Lock Guard</p>
+              <p class="text-[10px] text-slate-400">Log out session automatically after idle minutes</p>
+            </div>
+            <select id="auto-lock-select" onchange="updateAutoLockSetting(this.value)" class="bg-slate-950 border border-slate-800 text-yellow-500 py-1.5 px-2 rounded-lg focus:outline-none">
+              <option value="5" selected>5 Min</option>
+              <option value="15">15 Min</option>
+              <option value="30">30 Min</option>
+              <option value="0">Disabled</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- FLOATING TAB NAV -->
+    <nav class="glass-panel fixed bottom-0 left-0 right-0 z-30 border-t px-2 py-2 transition-all">
+      <div class="max-w-xl mx-auto flex justify-around items-center">
+        <button id="nav-tab-home" onclick="switchTab('home')" class="flex flex-col items-center gap-1 py-1 px-3 text-yellow-500 transition-all duration-300">
+          <i class="fa-solid fa-house text-lg"></i>
+          <span class="text-[9px] font-extrabold tracking-wider">HOME</span>
+        </button>
+
+        <button id="nav-tab-activities" onclick="switchTab('activities')" class="flex flex-col items-center gap-1 py-1 px-3 text-slate-400 hover:text-yellow-500 transition-all duration-300">
+          <i class="fa-solid fa-cubes text-lg"></i>
+          <span class="text-[9px] font-extrabold tracking-wider">PRODUCTS</span>
+        </button>
+
+        <button id="nav-tab-crew" onclick="switchTab('crew')" class="flex flex-col items-center gap-1 py-1 px-3 text-slate-400 hover:text-yellow-500 transition-all duration-300">
+          <i class="fa-solid fa-users text-lg"></i>
+          <span class="text-[9px] font-extrabold tracking-wider">CREW</span>
+        </button>
+
+        <button id="nav-tab-transactions" onclick="switchTab('transactions')" class="flex flex-col items-center gap-1 py-1 px-3 text-slate-400 hover:text-yellow-500 transition-all duration-300">
+          <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+          <span class="text-[9px] font-extrabold tracking-wider">AUDIT</span>
+        </button>
+
+        <button id="nav-tab-assets" onclick="switchTab('assets')" class="flex flex-col items-center gap-1 py-1 px-3 text-slate-400 hover:text-yellow-500 transition-all duration-300">
+          <i class="fa-solid fa-briefcase text-lg"></i>
+          <span class="text-[9px] font-extrabold tracking-wider">ASSETS</span>
+        </button>
+      </div>
+    </nav>
+
+  </section>
+
+  <!-- MODALS -->
+
+  <!-- MODAL: PREMIUM PRODUCT & NODE CONFIRMATION -->
+  <div id="product-confirm-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 id="prod-conf-heading" class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Verify Activation</h3>
+        <button onclick="closeModal('product-confirm-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="bg-blue-950/40 border border-blue-900/40 p-4 rounded-2xl text-xs space-y-2">
+        <div class="flex justify-between">
+          <span class="text-slate-400">Chosen Product:</span>
+          <span class="font-bold text-slate-200" id="prod-conf-name">N/A</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Required Amount:</span>
+          <span class="font-extrabold text-yellow-500" id="prod-conf-cost">$0.00</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Daily Return:</span>
+          <span class="font-bold text-green-400" id="prod-conf-rate">0%</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Epoch Lifespan:</span>
+          <span class="font-semibold text-slate-300" id="prod-conf-days">0 Days</span>
+        </div>
+      </div>
+
+      <form id="prod-commit-form" onsubmit="handleProductPurchaseCommit(event)" class="space-y-4 text-xs">
+        <input type="hidden" id="prod-conf-id">
+        <input type="hidden" id="prod-conf-type">
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Enter Password to Confirm</label>
+          <input type="password" id="prod-commit-password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-center focus:outline-none text-slate-200">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button type="button" onclick="closeModal('product-confirm-modal')" class="bg-slate-950 border border-slate-800 text-slate-400 font-bold py-2.5 rounded-xl text-center">
+            Cancel
+          </button>
+          <button type="submit" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-2.5 rounded-xl text-center shadow-md">
+            Execute
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: PROFILE & KYC STATUS -->
+  <div id="profile-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Private Credentials</h3>
+        <button onclick="closeModal('profile-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <div class="space-y-3.5 text-xs">
+        <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+          <div>
+            <p class="text-[9px] text-slate-400 font-bold uppercase">System UID Reference</p>
+            <p id="profile-uid" class="font-mono text-slate-100 font-black mt-0.5 select-all">N/A</p>
+          </div>
+          <button onclick="copyUID()" class="bg-slate-900 hover:bg-slate-850 px-2.5 py-1 rounded text-[10px] font-bold text-yellow-500 border border-slate-800">Copy</button>
+        </div>
+
+        <div>
+          <p class="text-[9px] text-slate-400 uppercase font-bold mb-1">Username Reference</p>
+          <p id="profile-username" class="font-bold text-slate-100 bg-slate-950 px-3 py-2 rounded-xl border border-slate-900">N/A</p>
+        </div>
+
+        <div>
+          <p class="text-[9px] text-slate-400 uppercase font-bold mb-1">Email Coordinates</p>
+          <p id="profile-email" class="font-bold text-slate-100 bg-slate-950 px-3 py-2 rounded-xl border border-slate-900">N/A</p>
+        </div>
+
+        <div>
+          <p class="text-[9px] text-slate-400 uppercase font-bold mb-1">Registered Phone</p>
+          <p id="profile-phone" class="font-bold text-slate-100 bg-slate-950 px-3 py-2 rounded-xl border border-slate-900">N/A</p>
+        </div>
+
+        <div class="flex justify-between items-center py-2.5 border-t border-slate-800">
+          <div>
+            <p class="font-bold text-slate-200">Verification Status</p>
+            <p class="text-[10px] text-slate-400">KYC Compliance Status</p>
+          </div>
+          <span id="profile-kyc" class="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2.5 py-1 rounded text-[10px] font-bold">Verified</span>
+        </div>
+      </div>
+
+      <button onclick="handleLogout()" class="w-full bg-red-600/10 hover:bg-red-600 hover:text-white text-red-500 font-bold py-3 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2 border border-red-500/20">
+        <i class="fa-solid fa-power-off text-xs"></i> Close Session
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: NOTIFICATIONS -->
+  <div id="notifications-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Inbox Notifications</h3>
+        <button onclick="closeModal('notifications-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div id="notifications-list" class="space-y-3 max-h-72 overflow-y-auto pr-1 text-xs text-slate-300">
+        <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80 space-y-1">
+          <p class="font-bold text-slate-100">Welcome to TriYield Platform!</p>
+          <p class="text-slate-400 text-[10px]">Your user account is now active. Register an Asset Plan or Mining Bot to initiate capital yield streams.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SUPPORT -->
+  <div id="support-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Support Helpdesk</h3>
+        <button onclick="closeModal('support-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <p class="text-xs text-slate-300 leading-relaxed">Reach out to our secure support channels during official working hours.</p>
+      
+      <div class="space-y-2.5">
+        <a href="https://wa.me/233561080160" target="_blank" class="flex items-center justify-between bg-slate-950 border border-slate-800 hover:border-green-500 p-3 rounded-2xl transition-all">
+          <div class="flex items-center gap-2.5 text-xs">
+            <i class="fa-brands fa-whatsapp text-green-500 text-lg"></i>
+            <div class="text-left">
+              <p class="font-bold text-slate-200">Customer Desk 1</p>
+              <p class="text-[10px] text-slate-400">+233 561 080 160</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CALCULATOR -->
+  <div id="calc-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-sm text-teal-400 uppercase tracking-widest">Yield Estimator</h3>
+        <button onclick="closeModal('calc-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Products Option</label>
+          <select id="calc-pool" onchange="runYieldCalculation()" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-3 focus:outline-none focus:border-teal-500 text-slate-100">
+            <option value="0.25-90">3 MONTHS Locked Pool (+25% Yield)</option>
+            <option value="0.3333-120">4 MONTHS Locked Pool (+33.33% Yield)</option>
+            <option value="0.5-180">6 MONTHS Locked Pool (+50% Yield)</option>
+            <option value="0.75-270">9 MONTHS Locked Pool (+75% Yield)</option>
+            <option value="1.0-365">1 YEAR Locked Pool (+100% Yield)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Investment Amount ($)</label>
+          <input type="number" id="calc-amount" value="100" min="10" oninput="runYieldCalculation()" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-3 focus:outline-none focus:border-teal-500 text-slate-100">
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Total Accrued Yield:</span>
+            <span id="calc-result-yield" class="font-extrabold text-green-400">$25.00</span>
+          </div>
+          <div class="flex justify-between font-bold text-slate-100 border-t border-slate-800 pt-2">
+            <span>Estimated Matured Return:</span>
+            <span id="calc-result-total" class="text-yellow-500">$125.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BIND NEW WALLET -->
+  <div id="add-wallet-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex justify-between items-center">
+        <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Bind Destination</h3>
+        <button onclick="closeModal('add-wallet-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <form id="add-wallet-form" onsubmit="handleBindWalletSubmit(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1.5">Select Network Channel</label>
+          <select id="wallet-type-select" onchange="toggleWalletFormInputs(this.value)" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-slate-200 focus:outline-none">
+            <option value="momo" selected>Mobile Money Channel (Local)</option>
+            <option value="crypto">USDT Target / Blockchain</option>
+          </select>
+        </div>
+
+        <!-- MOMO Options -->
+        <div id="wallet-momo-fields" class="space-y-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Carrier Network Option</label>
+            <select id="wallet-momo-network" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-slate-200 focus:outline-none">
+              <option value="MTN">MTN MoMo</option>
+              <option value="TELECEL">Telecel Cash</option>
+              <option value="AIRTELTIGO">AirtelTigo</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Account Registered Name</label>
+            <input type="text" id="wallet-momo-name" placeholder="John Doe" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-2.5 px-3.5 focus:outline-none text-slate-200">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Mobile Wallet Number</label>
+            <input type="tel" id="wallet-momo-number" placeholder="0537090034" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-2.5 px-3.5 focus:outline-none text-slate-200 font-mono">
+          </div>
+        </div>
+
+        <!-- CRYPTO Options -->
+        <div id="wallet-crypto-fields" class="space-y-3 hidden">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Target Blockchain</label>
+            <select id="wallet-crypto-network" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-slate-200 focus:outline-none">
+              <option value="TRC20">TRON Network (TRC20 USDT)</option>
+              <option value="BEP20">BNB Chain (BEP20 USDT)</option>
+              <option value="ERC20">Ethereum Network (ERC20 USDT)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Target Wallet Address</label>
+            <input type="text" id="wallet-crypto-address" placeholder="TGP4r9WQDcPvWbRG6cNMCKmK6..." class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-2.5 px-3.5 focus:outline-none text-slate-200 font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Enter Password to Confirm</label>
+          <input type="password" id="wallet-confirm-password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-center focus:outline-none text-slate-200">
+        </div>
+
+        <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-3 rounded-xl transition-all">
+          Link Cashout Route
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DEPOSIT TARGET HUB -->
+  <div id="deposit-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-4 overflow-y-auto max-h-[90vh]">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+        <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Deposit Hub</h3>
+        <button onclick="closeModal('deposit-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Tab select -->
+      <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+        <button id="dep-tab-momo" onclick="toggleDepositType('momo')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-yellow-500 text-slate-950 transition-all">Mobile Money</button>
+        <button id="dep-tab-crypto" onclick="toggleDepositType('crypto')" class="flex-1 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">Crypto Core</button>
+      </div>
+
+      <!-- FIAT MOBILE MONEY DISPATCH -->
+      <div id="dep-sub-momo" class="space-y-4 text-xs">
+        <div class="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl text-slate-300">
+          <p class="font-extrabold text-yellow-500 mb-1">Mobile Money Auto-Switching</p>
+          <p>Minimum Deposit: <strong>$10</strong> | Maximum: <strong>$10,000</strong></p>
+          <p class="text-[11px] mt-1 text-slate-400 font-semibold">Standard Conversion: <strong class="text-yellow-500" id="momo-rate-indicator">1 USD = 13.00 GHS</strong></p>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Select Local Provider Channel</label>
+          <select id="dep-momo-carrier" onchange="renderMomoDestinationAccount()" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-slate-200 focus:outline-none">
+            <option value="MTN" selected>MTN MoMo Router Account</option>
+            <option value="TELECEL">Telecel Cash Router Account</option>
+            <option value="AIRTELTIGO">AirtelTigo Money Router Account</option>
+          </select>
+        </div>
+
+        <!-- Dynamic MOMO details -->
+        <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 space-y-3">
+          <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Execute transmission to details below:</p>
+          
+          <div class="flex justify-between items-center bg-slate-900 px-3 py-2 rounded-xl border border-slate-850">
+            <div>
+              <p class="text-[9px] text-slate-500 uppercase font-bold">Target Account Name</p>
+              <p id="dep-momo-acc-name" class="font-black text-slate-200">SHALOM DONKOR</p>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center bg-slate-900 px-3 py-2 rounded-xl border border-slate-850">
+            <div>
+              <p class="text-[9px] text-slate-500 uppercase font-bold">Target Phone Number</p>
+              <p id="dep-momo-acc-num" class="font-mono font-black text-yellow-500 text-sm">0537090034</p>
+            </div>
+            <button onclick="copyDepositField('dep-momo-acc-num', 'Number')" class="bg-slate-800 hover:bg-slate-700 border border-slate-750 px-2 py-1 rounded text-[10px] text-yellow-500">Copy</button>
+          </div>
+
+          <div class="flex justify-between items-center bg-slate-900 px-3 py-2 rounded-xl border border-slate-850">
+            <div>
+              <p class="text-[9px] text-slate-500 uppercase font-bold">Required Reference / Memo</p>
+              <p id="dep-momo-acc-ref" class="font-mono font-black text-blue-400">RTW45WFWG5</p>
+            </div>
+            <button onclick="copyDepositField('dep-momo-acc-ref', 'Reference')" class="bg-slate-800 hover:bg-slate-700 border border-slate-750 px-2 py-1 rounded text-[10px] text-yellow-500">Copy</button>
+          </div>
+        </div>
+
+        <form id="dep-momo-submit-form" onsubmit="handleDepositSubmit(event, 'momo')" class="space-y-4">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Enter Deposit Amount (USD)</label>
+            <input type="number" id="dep-momo-usd-amount" required min="10" max="10000" placeholder="100" oninput="calculateGhsEquivalent(this.value)" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 focus:outline-none text-slate-200">
+            <p class="text-[10px] text-slate-400 mt-1">GHS Equivalent: <strong class="text-yellow-500 animate-pulse" id="dep-momo-ghs-equiv">0.00 GHS</strong></p>
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Transaction ID / Reference Hash</label>
+            <input type="text" id="dep-momo-tx-id" required placeholder="Enter final payment transaction reference ID" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 focus:outline-none text-slate-200 font-mono">
+          </div>
+
+          <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-3.5 rounded-xl transition-all shadow-md">
+            Submit Proof
+          </button>
+        </form>
+      </div>
+
+      <!-- CRYPTO DISPATCH -->
+      <div id="dep-sub-crypto" class="space-y-4 text-xs hidden">
+        <div class="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl text-slate-300">
+          <p class="font-extrabold text-blue-400 mb-1">Decentralized Blockchain Nodes</p>
+          <p>Minimum Deposit: <strong>$10</strong> | Maximum: <strong>$10,000</strong></p>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Select Network Channel</label>
+          <select id="dep-crypto-network" onchange="renderCryptoDestinationAddress()" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-slate-200 focus:outline-none">
+            <option value="TRC20" selected>TRON Network (TRC20 USDT)</option>
+            <option value="ARBITRUM">Arbitrum (USDT)</option>
+            <option value="BEP20">Binance Smart Chain (BEP20 USDT)</option>
+            <option value="ERC20">Ethereum Network (ERC20 USDT)</option>
+          </select>
+        </div>
+
+        <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 space-y-3">
+          <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Execute coin transmission to details:</p>
+          
+          <div class="bg-slate-900 p-3 rounded-xl space-y-1 overflow-hidden border border-slate-850">
+            <p class="text-[9px] text-slate-500 uppercase font-bold">Target Wallet Address</p>
+            <div class="flex justify-between items-center gap-2">
+              <p id="dep-crypto-target-address" class="font-mono text-xs text-yellow-500 select-all truncate">TGP4r9WQDcPvWbRG6cNMCKmK6RS1u6WwY4</p>
+              <button onclick="copyDepositField('dep-crypto-target-address', 'Address')" class="bg-slate-880 hover:bg-slate-700 border border-slate-750 px-2 py-1 rounded text-[10px] text-yellow-500 flex-shrink-0">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <form id="dep-crypto-submit-form" onsubmit="handleDepositSubmit(event, 'crypto')" class="space-y-4">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Deposited Amount (USDT)</label>
+            <input type="number" id="dep-crypto-amount" required min="10" max="10000" placeholder="100" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 focus:outline-none text-slate-200">
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Blockchain Hash Reference (TXID)</label>
+            <input type="text" id="dep-crypto-tx-id" required placeholder="Enter TRC20/BEP20/ERC20 network txid code" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 focus:outline-none text-slate-200 font-mono">
+          </div>
+
+          <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-3.5 rounded-xl transition-all shadow-md">
+            Submit Proof
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: WITHDRAWALS -->
+  <div id="withdraw-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex justify-between items-center">
+        <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Request Cashout</h3>
+        <button onclick="closeModal('withdraw-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Withdrawal timing information display -->
+      <div id="withdraw-time-alert" class="p-3 bg-blue-950/40 border border-blue-900/40 rounded-2xl text-[11px] space-y-1">
+        <p class="font-extrabold text-yellow-500 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation animate-pulse"></i>
+          <span>Withdrawal Rules Policy</span>
+        </p>
+        <p class="text-slate-300">
+          • Days allowed: <span class="text-white font-bold">Fridays and Saturdays</span> only.<br>
+          • <span class="text-emerald-400 font-bold">Every first Friday of each month</span> is completely surcharge-free (0% fee).<br>
+          • Standard fee: 3.00% on other withdrawal windows.
+        </p>
+      </div>
+
+      <div class="bg-slate-950 border border-slate-850 p-3 rounded-2xl text-xs space-y-1.5">
+        <div class="flex justify-between">
+          <span class="text-slate-400">Available Payout Balance:</span>
+          <span class="font-black text-green-400" id="withdraw-max-limit">$0.00</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Processing Surcharge Rate:</span>
+          <span id="withdraw-current-fee-rate" class="font-semibold text-slate-300">3.00%</span>
+        </div>
+        <div class="flex justify-between text-[11px] text-yellow-500">
+          <span>Min: $5</span>
+          <span>Max: $10,000</span>
+        </div>
+      </div>
+
+      <form id="withdraw-action-form" onsubmit="handleWithdrawalSubmit(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Target Payout Destination</label>
+          <select id="withdraw-wallet-bind" required class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-slate-200 focus:outline-none">
+            <!-- Bound options -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Withdraw Amount ($)</label>
+          <input type="number" id="withdraw-amount-input" required min="5" max="10000" placeholder="100" oninput="calculateWithdrawFee(this.value)" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 focus:outline-none text-slate-200">
+          <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+            <span>Surcharge: <strong class="text-red-400 font-mono" id="withdraw-surcharge-val">$0.00</strong></span>
+            <span>Estimated Payout: <strong class="text-green-400 font-mono" id="withdraw-final-credit-val">$0.00</strong></span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Enter Password to Confirm</label>
+          <input type="password" id="withdraw-confirm-password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-center focus:outline-none text-slate-200">
+        </div>
+
+        <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-md">
+          Request Withdrawal
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: LOCKED VAULT STAKING CONFIRMATION -->
+  <div id="stake-confirm-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Confirm Vault Lock</h3>
+        <button onclick="closeModal('stake-confirm-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="bg-blue-950/40 border border-blue-900/40 p-4 rounded-2xl text-xs space-y-2">
+        <div class="flex justify-between">
+          <span class="text-slate-400">Epoch Lock:</span>
+          <span class="font-bold text-slate-200" id="stake-conf-duration">3 MONTHS</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Accrued Yield Return:</span>
+          <span class="font-extrabold text-green-400" id="stake-conf-yield">25%</span>
+        </div>
+        <p class="text-[10px] text-amber-500 leading-relaxed mt-1.5 font-semibold">
+          <i class="fa-solid fa-triangle-exclamation"></i> Staking warning: Early termination is not possible before the maturation metrics are complete.
+        </p>
+      </div>
+
+      <form id="stake-commit-form" onsubmit="handleStakeCommit(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Staking Commitment Amount ($)</label>
+          <input type="number" id="stake-commit-amount" required min="100" max="10000" placeholder="100" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 focus:outline-none text-slate-200">
+          <p class="text-[9px] text-slate-400 mt-1">Locks both Deposit and Bonus balance accounts.</p>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Enter Password to Lock</label>
+          <input type="password" id="stake-commit-password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-center focus:outline-none text-slate-200">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button type="button" onclick="closeModal('stake-confirm-modal')" class="bg-slate-950 border border-slate-800 text-slate-400 font-bold py-2.5 rounded-xl text-center">
+            Cancel
+          </button>
+          <button type="submit" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-2.5 rounded-xl text-center shadow-md">
+            Execute Lock
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- CORE SYSTEM & CLIENT DATABASE ENGINE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      signInAnonymously 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      setDoc, 
+      getDoc, 
+      getDocs,
+      collection, 
+      onSnapshot, 
+      updateDoc, 
+      addDoc 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Application ID Configuration
+    const appId = 'triyield-capital-prod';
+    const firebaseConfig = {
+      apiKey: "AIzaSyCx4doSXTpf2FjEmdIz8plTJL_FkZhHHh0",
+      authDomain: "triyield.firebaseapp.com",
+      projectId: "triyield",
+      storageBucket: "triyield.firebasestorage.app",
+      messagingSenderId: "96409861523",
+      appId: "1:96409861523:web:2d989e8b2d81a4c9f93c66",
+      measurementId: "G-34DVZYJM5G"
+    };
+
+    let app, auth, db;
+    let isOfflineFallback = false;
+
+    // Database fallback to guarantee flawless execution
+    const localDatabase = {
+      users: JSON.parse(localStorage.getItem('tyc_users') || '{}'),
+      transactions: JSON.parse(localStorage.getItem('tyc_transactions') || '[]'),
+      packages: JSON.parse(localStorage.getItem('tyc_packages') || '[]'),
+      settings: JSON.parse(localStorage.getItem('tyc_settings') || '{"rate": 13}'),
+      approvals: JSON.parse(localStorage.getItem('tyc_approvals') || '[]')
+    };
+
+    function saveLocalDb() {
+      localStorage.setItem('tyc_users', JSON.stringify(localDatabase.users));
+      localStorage.setItem('tyc_transactions', JSON.stringify(localDatabase.transactions));
+      localStorage.setItem('tyc_packages', JSON.stringify(localDatabase.packages));
+      localStorage.setItem('tyc_settings', JSON.stringify(localDatabase.settings));
+      localStorage.setItem('tyc_approvals', JSON.stringify(localDatabase.approvals));
+    }
+
+    try {
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
+      console.log("Firebase operational engine established.");
+    } catch (err) {
+      console.warn("Could not connect directly with cloud API, starting offline client database.", err);
+      isOfflineFallback = true;
+    }
+
+    // Platform State
+    let currentUser = null;
+    let userDetails = null;
+    let userBalances = { minedBalance: 0, purchaseBalance: 0, stakeBalance: 0, bonusBalance: 10, depositBalance: 0 };
+    let linkedWallets = [];
+    let allTransactions = [];
+    let systemSettings = { rate: 13, minDeposit: 10, maxDeposit: 10000, minWithdraw: 5, maxWithdraw: 10000 };
+    let currentSelectedStakeIndex = null;
+    let autoLockTimer = null;
+    let lastActiveTime = Date.now();
+    let unreadNotifications = true; // Bell indicators set to alert initially
+
+    // Chart handlers
+    let yieldChart = null;
+    let allocationChart = null;
+
+    // ----------------------------------------------------
+    // INITIALIZATION DUAL PATHWAYS
+    // ----------------------------------------------------
+    const initAppAuth = async () => {
+      // Setup dynamic Notification indicator
+      updateNotificationIndicator();
+
+      if (isOfflineFallback) {
+        checkLocalSavedSession();
+        return;
+      }
+
+      try {
+        await signInAnonymously(auth);
+      } catch (e) {
+        console.warn("Firebase constraints triggered, launching offline databases.", e);
+        isOfflineFallback = true;
+        checkLocalSavedSession();
+      }
+    };
+
+    initAppAuth();
+
+    if (!isOfflineFallback && auth) {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          await ensureSystemSettingsRegistered();
+          checkLocalSavedSession();
+        } else {
+          currentUser = null;
+          switchAuthTab('login');
+        }
+      });
+    }
+
+    async function ensureSystemSettingsRegistered() {
+      if (isOfflineFallback) return;
+      try {
+        const settingDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'global');
+        const docSnap = await getDoc(settingDocRef);
+        if (!docSnap.exists()) {
+          await setDoc(settingDocRef, { rate: 13, minDeposit: 10, maxDeposit: 10000, minWithdraw: 5, maxWithdraw: 10000 });
+        } else {
+          systemSettings = { ...systemSettings, ...docSnap.data() };
+        }
+      } catch (e) {
+        isOfflineFallback = true;
+      }
+    }
+
+    function checkLocalSavedSession() {
+      const savedUid = localStorage.getItem("triyield_auth_uid");
+      if (savedUid) {
+        loadUserSession(savedUid);
+      }
+    }
+
+    // ----------------------------------------------------
+    // AUTHENTICATION LOGIC & FORM SECURITY
+    // ----------------------------------------------------
+    window.handleRegister = async function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('reg-name').value.trim();
+      const username = document.getElementById('reg-username').value.trim().toLowerCase();
+      const age = parseInt(document.getElementById('reg-age').value);
+      const occupation = document.getElementById('reg-occupation').value.trim();
+      const email = document.getElementById('reg-email').value.trim().toLowerCase();
+      const phoneCode = document.getElementById('reg-phone-code').value.trim();
+      const phoneNum = document.getElementById('reg-phone').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const confirmPassword = document.getElementById('reg-password-confirm').value;
+      const inviterCode = document.getElementById('reg-ref').value.trim().toLowerCase();
+
+      if (password !== confirmPassword) {
+        showToast("Password confirmations do not match", "error");
+        return;
+      }
+
+      showToast("Syncing user registry database...", "info");
+
+      const visualSerial = 'TYC' + Math.floor(100000 + Math.random() * 900000);
+      const generatedUserObj = {
+        name, username, age, occupation, email, phone: phoneCode + " " + phoneNum,
+        password,
+        uid: visualSerial, authUid: username, kycStatus: "Verified", createdAt: Date.now(),
+        balances: { minedBalance: 0.00, purchaseBalance: 0.00, stakeBalance: 0.00, bonusBalance: 10.00, depositBalance: 0.00 },
+        wallets: []
+      };
+
+      if (isOfflineFallback) {
+        if (localDatabase.users[username]) {
+          showToast("Username already registered in client profile database.", "error");
+          return;
+        }
+        localDatabase.users[username] = generatedUserObj;
+        saveLocalDb();
+        showToast("Registration completed! Login to access.", "success");
+        switchAuthTab('login');
+      } else {
+        try {
+          // Cloud registration
+          const usersRegistryRef = collection(db, 'artifacts', appId, 'public', 'data', 'users');
+          const registrySnap = await getDocs(usersRegistryRef);
+          let usernameExists = false;
+          registrySnap.forEach(d => { if (d.data().username === username) usernameExists = true; });
+
+          if (usernameExists) {
+            showToast("Username already registered.", "error");
+            return;
+          }
+
+          const userPrivateProfileRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'details');
+          await setDoc(userPrivateProfileRef, {
+            name, username, age, occupation, email, phone: phoneCode + " " + phoneNum, password,
+            inviterCode: inviterCode || null, uid: visualSerial, authUid: currentUser.uid, kycStatus: "Verified", createdAt: Date.now()
+          });
+
+          const userBalancesRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'balances', 'current');
+          await setDoc(userBalancesRef, { minedBalance: 0, purchaseBalance: 0, stakeBalance: 0, bonusBalance: 10, depositBalance: 0 });
+
+          const publicUserRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', currentUser.uid);
+          await setDoc(publicUserRef, { username, email, phone: phoneCode + " " + phoneNum, uid: visualSerial, authUid: currentUser.uid });
+
+          showToast("Registration compiled inside cloud registry.", "success");
+          switchAuthTab('login');
+        } catch (e) {
+          console.warn("Write restrictions detected, establishing local DB registers.");
+          isOfflineFallback = true;
+          localDatabase.users[username] = generatedUserObj;
+          saveLocalDb();
+          showToast("Registration fallback compiled successfully.", "success");
+          switchAuthTab('login');
+        }
+      }
+    };
+
+    window.handleLogin = async function(e) {
+      e.preventDefault();
+      const identifier = document.getElementById('login-identifier').value.trim().toLowerCase();
+      const password = document.getElementById('login-password').value;
+
+      showToast("Accessing encrypted vault profile...", "info");
+
+      if (isOfflineFallback) {
+        const uObj = localDatabase.users[identifier];
+        if (uObj && uObj.password === password) {
+          localStorage.setItem("triyield_auth_uid", identifier);
+          loadUserSession(identifier);
+        } else {
+          showToast("Access declined. Invalid credentials.", "error");
+        }
+      } else {
+        try {
+          const usersRegistryRef = collection(db, 'artifacts', appId, 'public', 'data', 'users');
+          const registrySnap = await getDocs(usersRegistryRef);
+          let matchedAuthUID = null;
+
+          registrySnap.forEach(d => {
+            const u = d.data();
+            if (u.username === identifier || u.email === identifier || u.phone === identifier) {
+              matchedAuthUID = d.id;
+            }
+          });
+
+          if (!matchedAuthUID) {
+            if (localDatabase.users[identifier]) {
+              isOfflineFallback = true;
+              localStorage.setItem("triyield_auth_uid", identifier);
+              loadUserSession(identifier);
+              return;
+            }
+            showToast("Account credentials not found in security database.", "error");
+            return;
+          }
+
+          const userPrivateProfileRef = doc(db, 'artifacts', appId, 'users', matchedAuthUID, 'profile', 'details');
+          const privateSnap = await getDoc(userPrivateProfileRef);
+
+          if (privateSnap.exists() && privateSnap.data().password === password) {
+            localStorage.setItem("triyield_auth_uid", matchedAuthUID);
+            loadUserSession(matchedAuthUID);
+          } else {
+            showToast("Password validation failed.", "error");
+          }
+        } catch (e) {
+          isOfflineFallback = true;
+          const uObj = localDatabase.users[identifier];
+          if (uObj && uObj.password === password) {
+            localStorage.setItem("triyield_auth_uid", identifier);
+            loadUserSession(identifier);
+          } else {
+            showToast("Offline credentials failed.", "error");
+          }
+        }
+      }
+    };
+
+    async function loadUserSession(authUid) {
+      if (isOfflineFallback) {
+        userDetails = localDatabase.users[authUid];
+        userBalances = userDetails.balances;
+        linkedWallets = userDetails.wallets || [];
+        allTransactions = localDatabase.transactions.filter(t => t.authUid === authUid);
+        
+        document.getElementById('user-avatar-text').innerText = userDetails.name.charAt(0).toUpperCase();
+        document.getElementById('profile-uid').innerText = userDetails.uid;
+        document.getElementById('profile-username').innerText = userDetails.username;
+        document.getElementById('profile-email').innerText = userDetails.email;
+        document.getElementById('profile-phone').innerText = userDetails.phone;
+        document.getElementById('referral-link-display').innerText = `https://www.TriYieldCapital.com?ref=${userDetails.username}`;
+        document.getElementById('sandbox-username').innerText = userDetails.username;
+
+        renderBalances();
+        renderLinkedWallets();
+        renderTransactionList();
+        loadUserActivePackages(authUid);
+        initializeCharts();
+        syncSandboxLedgers();
+
+        document.getElementById('auth-section').classList.add('hidden');
+        document.getElementById('app-section').classList.remove('hidden');
+        showToast(`Secure terminal active for: ${userDetails.name}!`, "success");
+        setupInactivityTimer();
+      } else {
+        try {
+          const userPrivateProfileRef = doc(db, 'artifacts', appId, 'users', authUid, 'profile', 'details');
+          const privateSnap = await getDoc(userPrivateProfileRef);
+          userDetails = privateSnap.data();
+
+          document.getElementById('user-avatar-text').innerText = userDetails.name.charAt(0).toUpperCase();
+          document.getElementById('profile-uid').innerText = userDetails.uid;
+          document.getElementById('profile-username').innerText = userDetails.username;
+          document.getElementById('profile-email').innerText = userDetails.email;
+          document.getElementById('profile-phone').innerText = userDetails.phone;
+          document.getElementById('referral-link-display').innerText = `https://www.TriYieldCapital.com?ref=${userDetails.username}`;
+          document.getElementById('sandbox-username').innerText = userDetails.username;
+
+          // Sync balances listener
+          onSnapshot(doc(db, 'artifacts', appId, 'users', authUid, 'balances', 'current'), (snap) => {
+            if (snap.exists()) {
+              userBalances = snap.data();
+              renderBalances();
+            }
+          });
+
+          // Sync wallets listener
+          onSnapshot(doc(db, 'artifacts', appId, 'users', authUid, 'wallets', 'binding'), (snap) => {
+            linkedWallets = snap.exists() ? (snap.data().wallets || []) : [];
+            renderLinkedWallets();
+          });
+
+          loadUserActivePackages(authUid);
+          loadUserTransactions();
+          initializeCharts();
+          syncSandboxLedgers();
+
+          document.getElementById('auth-section').classList.add('hidden');
+          document.getElementById('app-section').classList.remove('hidden');
+          showToast(`Encrypted link established for: ${userDetails.name}!`, "success");
+          setupInactivityTimer();
+        } catch (e) {
+          isOfflineFallback = true;
+          loadUserSession(authUid);
+        }
+      }
+    }
+
+    // ----------------------------------------------------
+    // DYNAMIC NOTIFICATION INBOX TRIGGERS
+    // ----------------------------------------------------
+    function updateNotificationIndicator() {
+      const badge = document.getElementById('notif-badge');
+      if (unreadNotifications) {
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    window.openNotificationModal = function() {
+      unreadNotifications = false;
+      updateNotificationIndicator();
+      openModal('notifications-modal');
+    };
+
+    // ----------------------------------------------------
+    // INACTIVITY LOCK METRICS
+    // ----------------------------------------------------
+    function setupInactivityTimer() {
+      if (autoLockTimer) clearInterval(autoLockTimer);
+      const resetActionTimer = () => { lastActiveTime = Date.now(); };
+      window.addEventListener('click', resetActionTimer);
+      window.addEventListener('keypress', resetActionTimer);
+
+      autoLockTimer = setInterval(() => {
+        const selMin = parseInt(document.getElementById('auto-lock-select').value);
+        if (selMin === 0) return;
+        const diffMins = (Date.now() - lastActiveTime) / 1000 / 60;
+        if (diffMins >= selMin) {
+          handleLogout();
+          showToast("Session disconnected automatically due to idle time limits.", "info");
+        }
+      }, 10000);
+    }
+
+    window.updateAutoLockSetting = function(val) {
+      showToast(`Inactivity limit recalibrated to ${val} Minutes.`, "success");
+    };
+
+    window.handleLogout = function() {
+      localStorage.removeItem("triyield_auth_uid");
+      currentUser = null;
+      userDetails = null;
+      if (autoLockTimer) clearInterval(autoLockTimer);
+      document.getElementById('app-section').classList.add('hidden');
+      document.getElementById('auth-section').classList.remove('hidden');
+    };
+
+    // ----------------------------------------------------
+    // PORTFOLIO BALANCES CALCULATIONS
+    // ----------------------------------------------------
+    function renderBalances() {
+      const estimatedTotal = (userBalances.depositBalance || 0) + (userBalances.bonusBalance || 0) + (userBalances.minedBalance || 0) + (userBalances.purchaseBalance || 0) + (userBalances.stakeBalance || 0);
+      const totalLiquidWithdrawable = (userBalances.minedBalance || 0) + (userBalances.purchaseBalance || 0) + (userBalances.stakeBalance || 0);
+
+      document.getElementById('earn-acc-mined').innerText = `$${(userBalances.minedBalance || 0).toFixed(2)}`;
+      document.getElementById('earn-acc-plan').innerText = `$${(userBalances.purchaseBalance || 0).toFixed(2)}`;
+      document.getElementById('earn-acc-stake').innerText = `$${(userBalances.stakeBalance || 0).toFixed(2)}`;
+      document.getElementById('earn-acc-bonus').innerText = `$${(userBalances.bonusBalance || 0).toFixed(2)}`;
+
+      document.getElementById('asset-total-balance').innerText = `$${estimatedTotal.toFixed(2)}`;
+      document.getElementById('asset-withdrawable-balance').innerText = `$${totalLiquidWithdrawable.toFixed(2)}`;
+      document.getElementById('asset-bonus-balance').innerText = `$${(userBalances.bonusBalance || 0).toFixed(2)}`;
+      document.getElementById('withdraw-max-limit').innerText = `$${totalLiquidWithdrawable.toFixed(2)}`;
+
+      if (isOfflineFallback && userDetails) {
+        localDatabase.users[userDetails.username].balances = userBalances;
+        saveLocalDb();
+      }
+      updateChartsData();
+    }
+
+    // ----------------------------------------------------
+    // ANALYTICAL CHART RENDERING
+    // ----------------------------------------------------
+    function initializeCharts() {
+      const ctxYield = document.getElementById('yieldChart').getContext('2d');
+      if (yieldChart) yieldChart.destroy();
+      yieldChart = new Chart(ctxYield, {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'Liquidity Velocity Index',
+            data: [1200, 1500, 1420, 1800, 2100, 2450, 2900],
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.05)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: 'rgba(150,150,150,0.05)' } },
+            y: { grid: { color: 'rgba(150,150,150,0.05)' } }
+          }
+        }
+      });
+
+      const ctxAllocation = document.getElementById('allocationChart').getContext('2d');
+      if (allocationChart) allocationChart.destroy();
+      allocationChart = new Chart(ctxAllocation, {
+        type: 'doughnut',
+        data: {
+          labels: ['Mined Vault', 'Asset Plans', 'Vault Staked', 'Bonus Wallet'],
+          datasets: [{
+            data: [
+              userBalances.minedBalance || 0,
+              userBalances.purchaseBalance || 0,
+              userBalances.stakeBalance || 0,
+              userBalances.bonusBalance || 0
+            ],
+            backgroundColor: ['#22d3ee', '#f59e0b', '#3b82f6', '#c084fc'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } }
+        }
+      });
+    }
+
+    function updateChartsData() {
+      if (allocationChart) {
+        allocationChart.data.datasets[0].data = [
+          userBalances.minedBalance || 0,
+          userBalances.purchaseBalance || 0,
+          userBalances.stakeBalance || 0,
+          userBalances.bonusBalance || 0
+        ];
+        allocationChart.update();
+      }
+    }
+
+    // ----------------------------------------------------
+    // PRODUCTS CONFIGURATIONS
+    // ----------------------------------------------------
+    const stakeOptions = [
+      { id: 'stake_3m', duration: '3 MONTHS locked', interest: '25% Total Return', multiplier: 0.25 },
+      { id: 'stake_4m', duration: '4 MONTHS locked', interest: '33.33% Total Return', multiplier: 0.3333 },
+      { id: 'stake_6m', duration: '6 MONTHS locked', interest: '50% Total Return', multiplier: 0.50 },
+      { id: 'stake_9m', duration: '9 MONTHS locked', interest: '75% Total Return', multiplier: 0.75 },
+      { id: 'stake_1y', duration: '1 YEAR locked', interest: '100% Total Return', multiplier: 1.00 }
+    ];
+
+    const purchasePlanOptions = [
+      { id: 'estate_t77', name: 'REAL ESTATE VALUE POOL T-77', amount: 10, rate: 0.035, days: 40, total: 14 },
+      { id: 'digital_t550', name: 'DIGITAL STOCKS OPTION T-550', amount: 30, rate: 0.028, days: 45, total: 37.8 },
+      { id: 'commodities_t700', name: 'COMMODITIES COPPER EXPANSION T-700', amount: 50, rate: 0.023, days: 55, total: 63.25 },
+      { id: 'stocks_t870', name: 'GLOBAL MARKETS HEDGE POOL T-870', amount: 100, rate: 0.0175, days: 75, total: 131.25 }
+    ];
+
+    const miningOptions = [
+      { id: 'miner_t5', name: 'MINING HARDRUN T5 NODE', amount: 10, rate: 0.035, days: 40, total: 14 },
+      { id: 'hash_t45', name: 'CRYPTOCURRENCY HASH EXPANSION T45', amount: 30, rate: 0.028, days: 45, total: 37.8 },
+      { id: 'nect_t76', name: 'HIGH VELOCITY RIG CAP K70', amount: 100, rate: 0.0175, days: 75, total: 131.25 }
+    ];
+
+    function renderProducts() {
+      let html = '';
+      stakeOptions.forEach((opt, idx) => {
+        html += `
+          <div class="themed-card border rounded-2xl p-4 flex justify-between items-center hover:border-blue-500/50 transition-all">
+            <div>
+              <p class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">LOCK LEVEL ${idx+1}</p>
+              <h4 class="font-extrabold text-sm mt-0.5">${opt.duration}</h4>
+              <p class="text-xs text-green-400 font-bold mt-1">${opt.interest}</p>
+            </div>
+            <button onclick="triggerStakeConfirm(${idx})" class="bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-3.5 py-2 rounded-xl text-xs transition-all">
+              Lock Now
+            </button>
+          </div>
+        `;
+      });
+      document.getElementById('stake-cards-list').innerHTML = html;
+
+      let plansHtml = '';
+      purchasePlanOptions.forEach(opt => {
+        plansHtml += `
+          <div class="themed-card border rounded-2xl p-4 space-y-3 hover:border-yellow-500/50 transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-amber-500/10 text-yellow-500 border border-amber-500/20 font-extrabold text-[8px] px-2 py-0.5 rounded uppercase">COMMODITY CONTRACT</span>
+                <h4 class="font-bold text-sm mt-1">${opt.name}</h4>
+              </div>
+              <p class="font-black text-yellow-500 text-sm">$${opt.amount}.00</p>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-center text-[9px] bg-slate-950 p-2.5 rounded-xl border border-slate-900">
+              <div>
+                <p class="text-slate-500 font-bold">Daily Return</p>
+                <p class="font-extrabold text-slate-200 mt-0.5">${(opt.rate * 100).toFixed(2)}%</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-bold">Epoch Days</p>
+                <p class="font-extrabold text-slate-200 mt-0.5">${opt.days} Days</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-bold">Total Payout</p>
+                <p class="font-extrabold text-green-400 mt-0.5">$${opt.total.toFixed(2)}</p>
+              </div>
+            </div>
+            <button onclick="triggerProductConfirm('${opt.id}', 'plan')" class="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-black py-2 rounded-xl text-xs transition-all">
+              Activate Commodity Allocation
+            </button>
+          </div>
+        `;
+      });
+      document.getElementById('purchase-plans-list').innerHTML = plansHtml;
+
+      let minersHtml = '';
+      miningOptions.forEach(opt => {
+        minersHtml += `
+          <div class="themed-card border rounded-2xl p-4 space-y-3 hover:border-teal-500/50 transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-teal-500/10 text-teal-400 border border-teal-500/20 font-extrabold text-[8px] px-2 py-0.5 rounded uppercase">MINING BOT</span>
+                <h4 class="font-bold text-sm mt-1">${opt.name}</h4>
+              </div>
+              <p class="font-black text-teal-400 text-sm">$${opt.amount}.00</p>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-center text-[9px] bg-slate-950 p-2.5 rounded-xl border border-slate-900">
+              <div>
+                <p class="text-slate-500 font-bold">Daily Yield</p>
+                <p class="font-extrabold text-slate-200 mt-0.5">${(opt.rate * 100).toFixed(2)}%</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-bold">Epoch Days</p>
+                <p class="font-extrabold text-slate-200 mt-0.5">${opt.days} Days</p>
+              </div>
+              <div>
+                <p class="text-slate-500 font-bold">Total Payout</p>
+                <p class="font-extrabold text-green-400 mt-0.5">$${opt.total.toFixed(2)}</p>
+              </div>
+            </div>
+            <button onclick="triggerProductConfirm('${opt.id}', 'mining')" class="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-black py-2 rounded-xl text-xs transition-all">
+              Activate Miner Bot
+            </button>
+          </div>
+        `;
+      });
+      document.getElementById('mining-cards-list').innerHTML = minersHtml;
+    }
+    renderProducts();
+
+    // ----------------------------------------------------
+    // PRODUCTS ACTIVATIONS
+    // ----------------------------------------------------
+    window.triggerProductConfirm = function(id, type) {
+      const list = type === 'plan' ? purchasePlanOptions : miningOptions;
+      const opt = list.find(x => x.id === id);
+      if (!opt) return;
+
+      document.getElementById('prod-conf-id').value = id;
+      document.getElementById('prod-conf-type').value = type;
+      document.getElementById('prod-conf-name').innerText = opt.name;
+      document.getElementById('prod-conf-cost').innerText = `$${opt.amount}.00`;
+      document.getElementById('prod-conf-rate').innerText = `${(opt.rate * 100).toFixed(2)}% Daily`;
+      document.getElementById('prod-conf-days').innerText = `${opt.days} Days`;
+      document.getElementById('prod-commit-password').value = '';
+
+      openModal('product-confirm-modal');
+    };
+
+    window.handleProductPurchaseCommit = async function(e) {
+      e.preventDefault();
+      const id = document.getElementById('prod-conf-id').value;
+      const type = document.getElementById('prod-conf-type').value;
+      const pass = document.getElementById('prod-commit-password').value;
+
+      if (pass !== userDetails.password) {
+        showToast("Invalid password credential confirmation.", "error");
+        return;
+      }
+
+      const list = type === 'plan' ? purchasePlanOptions : miningOptions;
+      const opt = list.find(x => x.id === id);
+      if (!opt) return;
+
+      const totalCap = (userBalances.depositBalance || 0) + (userBalances.bonusBalance || 0);
+      if (totalCap < opt.amount) {
+        showToast("Insufficient capital, complete deposit transactions first.", "error");
+        return;
+      }
+
+      showToast("Triggering activation cycle...", "info");
+
+      let deductionLeft = opt.amount;
+      let depBal = userBalances.depositBalance || 0;
+      let bonBal = userBalances.bonusBalance || 0;
+
+      if (bonBal >= deductionLeft) {
+        bonBal -= deductionLeft;
+        deductionLeft = 0;
+      } else {
+        deductionLeft -= bonBal;
+        bonBal = 0;
+      }
+      if (deductionLeft > 0) depBal -= deductionLeft;
+
+      const packageObj = {
+        productId: opt.id,
+        name: opt.name,
+        type: type,
+        principal: opt.amount,
+        rate: opt.rate,
+        startTime: Date.now(),
+        lastClaimTime: Date.now(),
+        lifespanDays: opt.days,
+        status: 'active',
+        claimedSoFar: 0,
+        lastDailyCheckIn: 0,
+        authUid: userDetails.authUid
+      };
+
+      const transactionObj = {
+        type: 'purchase',
+        amount: opt.amount,
+        description: `Activated allocation for ${opt.name}`,
+        timestamp: Date.now(),
+        status: 'completed',
+        authUid: userDetails.authUid
+      };
+
+      if (isOfflineFallback) {
+        userBalances.depositBalance = depBal;
+        userBalances.bonusBalance = bonBal;
+        localDatabase.packages.push(packageObj);
+        localDatabase.transactions.push(transactionObj);
+        saveLocalDb();
+
+        loadUserActivePackages(userDetails.authUid);
+        loadUserTransactions();
+        renderBalances();
+        closeModal('product-confirm-modal');
+        showToast(`Allocated successfully! Check current statuses inside RUNS.`, "success");
+      } else {
+        try {
+          const balancesRef = doc(db, 'artifacts', appId, 'users', userDetails.authUid, 'balances', 'current');
+          await updateDoc(balancesRef, { depositBalance: depBal, bonusBalance: bonBal });
+
+          await addDoc(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'packages'), packageObj);
+          await addDoc(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'transactions'), transactionObj);
+
+          closeModal('product-confirm-modal');
+          showToast(`Cloud connection locked for ${opt.name}!`, "success");
+        } catch (e) {
+          isOfflineFallback = true;
+          handleProductPurchaseCommit(e);
+        }
+      }
+    };
+
+    window.triggerStakeConfirm = function(idx) {
+      currentSelectedStakeIndex = idx;
+      const opt = stakeOptions[idx];
+      document.getElementById('stake-conf-duration').innerText = opt.duration;
+      document.getElementById('stake-conf-yield').innerText = opt.interest;
+      document.getElementById('stake-commit-password').value = '';
+      openModal('stake-confirm-modal');
+    };
+
+    window.handleStakeCommit = async function(e) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('stake-commit-amount').value);
+      const pass = document.getElementById('stake-commit-password').value;
+
+      if (amount < 100 || amount > 10000) {
+        showToast("Locked pool limits: Min $100 | Max $10,000", "error");
+        return;
+      }
+      if (pass !== userDetails.password) {
+        showToast("Password confirmation failed.", "error");
+        return;
+      }
+
+      const totalCap = (userBalances.depositBalance || 0) + (userBalances.bonusBalance || 0);
+      if (totalCap < amount) {
+        showToast("Insufficient capital pools.", "error");
+        return;
+      }
+
+      showToast("Establishing long-term stake contract...", "info");
+
+      let deductionLeft = amount;
+      let depBal = userBalances.depositBalance || 0;
+      let bonBal = userBalances.bonusBalance || 0;
+
+      if (bonBal >= deductionLeft) {
+        bonBal -= deductionLeft;
+        deductionLeft = 0;
+      } else {
+        deductionLeft -= bonBal;
+        bonBal = 0;
+      }
+      if (deductionLeft > 0) depBal -= deductionLeft;
+
+      const opt = stakeOptions[currentSelectedStakeIndex];
+      const packageObj = {
+        productId: opt.id,
+        name: `LOCKED POOL - ${opt.duration}`,
+        type: 'stake',
+        principal: amount,
+        rate: opt.multiplier,
+        startTime: Date.now(),
+        lastClaimTime: Date.now(),
+        lifespanDays: opt.duration.includes('3') ? 90 : opt.duration.includes('4') ? 120 : opt.duration.includes('6') ? 180 : opt.duration.includes('9') ? 270 : 365,
+        status: 'active',
+        claimedSoFar: 0,
+        authUid: userDetails.authUid
+      };
+
+      const transactionObj = {
+        type: 'purchase',
+        amount: amount,
+        description: `Committed capital into Locked Pool (${opt.duration})`,
+        timestamp: Date.now(),
+        status: 'completed',
+        authUid: userDetails.authUid
+      };
+
+      if (isOfflineFallback) {
+        userBalances.depositBalance = depBal;
+        userBalances.bonusBalance = bonBal;
+        localDatabase.packages.push(packageObj);
+        localDatabase.transactions.push(transactionObj);
+        saveLocalDb();
+
+        loadUserActivePackages(userDetails.authUid);
+        loadUserTransactions();
+        renderBalances();
+        closeModal('stake-confirm-modal');
+        showToast("Capital locked inside secure vault contract successfully!", "success");
+      } else {
+        try {
+          const balancesRef = doc(db, 'artifacts', appId, 'users', userDetails.authUid, 'balances', 'current');
+          await updateDoc(balancesRef, { depositBalance: depBal, bonusBalance: bonBal });
+
+          await addDoc(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'packages'), packageObj);
+          await addDoc(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'transactions'), transactionObj);
+
+          closeModal('stake-confirm-modal');
+          showToast("Staking transaction written to cloud vault.", "success");
+        } catch (e) {
+          isOfflineFallback = true;
+          handleStakeCommit(e);
+        }
+      }
+    };
+
+    // ----------------------------------------------------
+    // LIVE TICKING REVENUE PROCESS
+    // ----------------------------------------------------
+    let mechanicalTimer = null;
+    let runningPackages = [];
+
+    function loadUserActivePackages(authUid) {
+      if (mechanicalTimer) clearInterval(mechanicalTimer);
+
+      if (isOfflineFallback) {
+        runningPackages = localDatabase.packages.filter(p => p.authUid === authUid);
+        renderCurrentRunsList();
+        mechanicalTimer = setInterval(() => { renderCurrentRunsList(); }, 2500);
+      } else {
+        try {
+          onSnapshot(collection(db, 'artifacts', appId, 'users', authUid, 'packages'), (snap) => {
+            runningPackages = [];
+            snap.forEach(doc => {
+              runningPackages.push({ id: doc.id, ...doc.data() });
+            });
+            renderCurrentRunsList();
+          });
+          mechanicalTimer = setInterval(() => { renderCurrentRunsList(); }, 2500);
+        } catch (e) {
+          isOfflineFallback = true;
+          loadUserActivePackages(authUid);
+        }
+      }
+    }
+
+    function renderCurrentRunsList() {
+      let activeHtml = '';
+      let finishedHtml = '';
+      let activeCount = 0;
+
+      runningPackages.forEach((pkg, index) => {
+        const timeElapsedSec = (Date.now() - pkg.startTime) / 1000;
+        const totalDurationSec = pkg.lifespanDays * 24 * 60 * 60;
+        const progressPercent = Math.min(100, (timeElapsedSec / totalDurationSec) * 100);
+
+        if (progressPercent >= 100 && pkg.status === 'active') {
+          pkg.status = 'expired';
+          maturedRunPayout(pkg, index);
+        }
+
+        if (pkg.status === 'active') {
+          activeCount++;
+          let currentTickEarnings = 0;
+          if (pkg.type === 'stake') {
+            currentTickEarnings = pkg.principal * pkg.rate * (timeElapsedSec / totalDurationSec);
+          } else {
+            currentTickEarnings = pkg.principal * pkg.rate * (timeElapsedSec / (24 * 60 * 60));
+          }
+
+          const dailyAccrualRate = pkg.type === 'stake' ? 0 : pkg.principal * pkg.rate;
+
+          activeHtml += `
+            <div class="bg-slate-950 border border-slate-900 rounded-2xl p-4 space-y-3 relative overflow-hidden running-glow">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h5 class="font-extrabold text-sm text-slate-200">${pkg.name}</h5>
+                  <p class="text-[9px] text-green-400 font-extrabold uppercase tracking-widest mt-1 flex items-center gap-1.5">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+                    <span>TICKING LIVE</span>
+                  </p>
+                </div>
+                <div class="text-right text-slate-200">
+                  <p class="text-xs">Principal: <strong>$${pkg.principal}</strong></p>
+                </div>
+              </div>
+
+              <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-850 flex justify-between items-center text-slate-200">
+                <div>
+                  <p class="text-[9px] text-slate-500 uppercase font-bold">Unreleased Accrual</p>
+                  <p class="font-mono text-xs font-black text-green-400 animate-pulse">$${currentTickEarnings.toFixed(6)}</p>
+                </div>
+                <div>
+                  <p class="text-[9px] text-slate-500 uppercase font-bold text-right">Yield Index</p>
+                  <p class="text-xs font-bold text-slate-300 text-right">$${dailyAccrualRate.toFixed(2)}/Day</p>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex justify-between text-[9px] text-slate-400 font-semibold">
+                  <span>Progress Lock Ratio: ${progressPercent.toFixed(2)}%</span>
+                  <span>Days remaining: ${Math.max(0, Math.ceil(pkg.lifespanDays - (timeElapsedSec / 86400)))}</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                  <div class="bg-gradient-to-r from-teal-500 to-blue-500 h-full transition-all" style="width: ${progressPercent}%"></div>
+                </div>
+              </div>
+
+              ${pkg.type === 'mining' ? `
+                <div class="pt-1">
+                  <button onclick="claimMinerDaily('${pkg.id || index}', ${index})" class="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-black py-2 rounded-xl text-[10px] tracking-wider uppercase transition-all shadow">
+                    Manual Node Harvest
+                  </button>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        } else {
+          finishedHtml += `
+            <div class="bg-slate-950/40 border border-slate-900 rounded-2xl p-3 flex justify-between items-center opacity-65 text-slate-400">
+              <div>
+                <h5 class="font-bold">${pkg.name}</h5>
+                <p class="text-[10px]">Matured Lock: $${pkg.principal}</p>
+              </div>
+              <span class="bg-slate-900 border border-slate-850 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase">Matured</span>
+            </div>
+          `;
+        }
+      });
+
+      document.getElementById('active-pkg-count').innerText = activeCount;
+      document.getElementById('active-packages-list').innerHTML = activeHtml || '<p class="text-xs text-slate-500 italic text-center py-6">No active product structures running currently.</p>';
+      document.getElementById('expired-packages-list').innerHTML = finishedHtml || '<p class="text-xs text-slate-500 italic text-center py-2">No expired locks currently on record.</p>';
+    }
+
+    window.claimMinerDaily = async function(pkgId, fallbackIdx) {
+      let pkg = isOfflineFallback ? localDatabase.packages[fallbackIdx] : runningPackages.find(x => x.id === pkgId);
+      if (!pkg) return;
+
+      const oneDayMs = 24 * 60 * 60 * 1000;
+      const now = Date.now();
+      const lastCheckIn = pkg.lastDailyCheckIn || 0;
+
+      if (now - lastCheckIn < oneDayMs) {
+        const remainingHours = Math.ceil((oneDayMs - (now - lastCheckIn)) / (1000 * 60 * 60));
+        showToast(`Cool-down period in progress. Please wait ${remainingHours} hours for next harvest check-in.`, "error");
+        return;
+      }
+
+      showToast("Harvesting computed block...", "info");
+
+      const harvestAmount = pkg.principal * pkg.rate;
+
+      if (isOfflineFallback) {
+        pkg.lastDailyCheckIn = now;
+        pkg.claimedSoFar = (pkg.claimedSoFar || 0) + harvestAmount;
+        userBalances.minedBalance = (userBalances.minedBalance || 0) + harvestAmount;
+        
+        localDatabase.transactions.push({
+          type: 'earn',
+          amount: harvestAmount,
+          description: `Harvested computed mining block from ${pkg.name}`,
+          timestamp: now,
+          status: 'completed',
+          authUid: userDetails.authUid
+        });
+
+        saveLocalDb();
+        renderBalances();
+        renderTransactionList();
+        renderCurrentRunsList();
+        showToast(`Successfully credited +$${harvestAmount.toFixed(2)} to Mined Account!`, "success");
+      } else {
+        try {
+          const balancesRef = doc(db, 'artifacts', appId, 'users', userDetails.authUid, 'balances', 'current');
+          await updateDoc(balancesRef, { minedBalance: (userBalances.minedBalance || 0) + harvestAmount });
+
+          const pkgDocRef = doc(db, 'artifacts', appId, 'users', userDetails.authUid, 'packages', pkg.id);
+          await updateDoc(pkgDocRef, { lastDailyCheckIn: now, claimedSoFar: (pkg.claimedSoFar || 0) + harvestAmount });
+
+          await addDoc(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'transactions'), {
+            type: 'earn',
+            amount: harvestAmount,
+            description: `Harvested computed mining block from ${pkg.name}`,
+            timestamp: now,
+            status: 'completed'
+          });
+
+          showToast("Cloud harvest completed successfully.", "success");
+        } catch (e) {
+          isOfflineFallback = true;
+          claimMinerDaily(pkgId, fallbackIdx);
+        }
+      }
+    };
+
+    async function maturedRunPayout(pkg, index) {
+      if (pkg.type === 'stake') {
+        const yields = pkg.principal * pkg.rate;
+        const totalPayout = pkg.principal + yields;
+
+        if (isOfflineFallback) {
+          userBalances.depositBalance = (userBalances.depositBalance || 0) + pkg.principal;
+          userBalances.stakeBalance = (userBalances.stakeBalance || 0) + yields;
+          localDatabase.packages[index].status = 'expired';
+
+          localDatabase.transactions.push({
+            type: 'claim',
+            amount: totalPayout,
+            description: `Vault lock matured. Principal returned with +$${yields.toFixed(2)} dividends.`,
+            timestamp: Date.now(),
+            status: 'completed',
+            authUid: userDetails.authUid
+          });
+
+          saveLocalDb();
+          renderBalances();
+          renderTransactionList();
+          showToast(`Vault locked contract matured! Credited $${totalPayout.toFixed(2)} to portfolio.`, "success");
+        } else {
+          try {
+            const balancesRef = doc(db, 'artifacts', appId, 'users', userDetails.authUid, 'balances', 'current');
+            await updateDoc(balancesRef, {
+              depositBalance: (userBalances.depositBalance || 0) + pkg.principal,
+              stakeBalance: (userBalances.stakeBalance || 0) + yields
+            });
+
+            const pkgDocRef = doc(db, 'artifacts', appId, 'users', userDetails.authUid, 'packages', pkg.id);
+            await updateDoc(pkgDocRef, { status: 'expired' });
+
+            await addDoc(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'transactions'), {
+              type: 'claim',
+              amount: totalPayout,
+              description: `Vault lock matured. Principal and yields released.`,
+              timestamp: Date.now(),
+              status: 'completed'
+            });
+          } catch (e) {
+            isOfflineFallback = true;
+            maturedRunPayout(pkg, index);
+          }
+        }
+      }
+    }
+
+    // ----------------------------------------------------
+    // WALLETS BINDING & CONFIGS
+    // ----------------------------------------------------
+    window.toggleWalletFormInputs = function(type) {
+      if (type === 'crypto') {
+        document.getElementById('wallet-crypto-fields').classList.remove('hidden');
+        document.getElementById('wallet-momo-fields').classList.add('hidden');
+      } else {
+        document.getElementById('wallet-crypto-fields').classList.add('hidden');
+        document.getElementById('wallet-momo-fields').classList.remove('hidden');
+      }
+    };
+
+    window.handleBindWalletSubmit = async function(e) {
+      e.preventDefault();
+      const type = document.getElementById('wallet-type-select').value;
+      const pass = document.getElementById('wallet-confirm-password').value;
+
+      if (pass !== userDetails.password) {
+        showToast("Invalid security password.", "error");
+        return;
+      }
+      if (linkedWallets.length >= 2) {
+        showToast("Maximum bound wallet destinations reached.", "error");
+        return;
+      }
+
+      let walletObject = {};
+      if (type === 'crypto') {
+        const net = document.getElementById('wallet-crypto-network').value;
+        const addr = document.getElementById('wallet-crypto-address').value.trim();
+        if (!addr) return;
+        walletObject = { type: 'crypto', network: net, address: addr };
+      } else {
+        const net = document.getElementById('wallet-momo-network').value;
+        const name = document.getElementById('wallet-momo-name').value.trim();
+        const num = document.getElementById('wallet-momo-number').value.trim();
+        if (!name || !num) return;
+        walletObject = { type: 'momo', network: net, address: num, name: name };
+      }
+
+      showToast("Linking outflow destination...", "info");
+
+      if (isOfflineFallback) {
+        linkedWallets.push(walletObject);
+        localDatabase.users[userDetails.username].wallets = linkedWallets;
+        saveLocalDb();
+        renderLinkedWallets();
+        closeModal('add-wallet-modal');
+        document.getElementById('add-wallet-form').reset();
+        showToast("Outflow destination bound successfully!", "success");
+      } else {
+        try {
+          const updated = [...linkedWallets, walletObject];
+          const bindingRef = doc(db, 'artifacts', appId, 'users', userDetails.authUid, 'wallets', 'binding');
+          await setDoc(bindingRef, { wallets: updated });
+
+          closeModal('add-wallet-modal');
+          document.getElementById('add-wallet-form').reset();
+          showToast("Outflow destination bound securely in cloud.", "success");
+        } catch (e) {
+          isOfflineFallback = true;
+          handleBindWalletSubmit(e);
+        }
+      }
+    };
+
+    function renderLinkedWallets() {
+      document.getElementById('wallet-count-badge').innerText = `${linkedWallets.length} / 2 Bound`;
+      let html = '';
+      let optionsHtml = '';
+
+      if (linkedWallets.length === 0) {
+        document.getElementById('bound-wallets-display').innerHTML = '<p class="italic text-center text-slate-500 py-2">No withdrawal destinations bound.</p>';
+        document.getElementById('withdraw-wallet-bind').innerHTML = '<option value="">Bind a payout wallet in ASSETS first</option>';
+        return;
+      }
+
+      linkedWallets.forEach((w, idx) => {
+        const label = w.type === 'crypto' ? `USDT Chain Target (${w.network})` : `Momo [${w.network}] - ${w.name}`;
+        html += `
+          <div class="bg-slate-950 p-3 rounded-2xl border border-slate-900 flex justify-between items-center text-xs text-slate-200">
+            <div>
+              <p class="font-extrabold">${label}</p>
+              <p class="font-mono text-[10px] text-slate-500 mt-0.5">${w.address}</p>
+            </div>
+            <span class="text-[9px] bg-green-500/10 border border-green-500/20 text-green-400 font-extrabold uppercase px-2 py-0.5 rounded">Linked</span>
+          </div>
+        `;
+        optionsHtml += `<option value="${idx}">${label} (${w.address})</option>`;
+      });
+
+      document.getElementById('bound-wallets-display').innerHTML = html;
+      document.getElementById('withdraw-wallet-bind').innerHTML = optionsHtml;
+    }
+
+    // ----------------------------------------------------
+    // DEPOSITS ROUTING
+    // ----------------------------------------------------
+    const cryptoAddresses = {
+      TRC20: "TGP4r9WQDcPvWbRG6cNMCKmK6RS1u6WwY4",
+      ARBITRUM: "0xd44e5dcbff418ac924ca3e1f59fc58db3ea81ef9",
+      BEP20: "0xd44e5dcbff418ac924ca3e1f59fc58db3ea81ef9",
+      ERC20: "0xd44e5dcbff418ac924ca3e1f59fc58db3ea81ef9"
+    };
+
+    window.renderMomoDestinationAccount = function() {
+      const carrier = document.getElementById('dep-momo-carrier').value;
+      let name = "SHALOM DONKOR", num = "0537090034";
+
+      if (carrier === "TELECEL") {
+        name = "MERCY QAUCIOE";
+        num = "0207659671";
+      } else if (carrier === "AIRTELTIGO") {
+        name = "GEORGINA MENSAH";
+        num = "0561080160";
+      }
+
+      document.getElementById('dep-momo-acc-name').innerText = name;
+      document.getElementById('dep-momo-acc-num').innerText = num;
+      document.getElementById('dep-momo-acc-ref').innerText = 'TYC' + Math.floor(10000 + Math.random() * 90000) + 'X8';
+    };
+
+    window.calculateGhsEquivalent = function(usdVal) {
+      const parsed = parseFloat(usdVal) || 0;
+      const rate = systemSettings.rate || 13;
+      document.getElementById('dep-momo-ghs-equiv').innerText = `${(parsed * rate).toFixed(2)} GHS`;
+    };
+
+    window.renderCryptoDestinationAddress = function() {
+      const net = document.getElementById('dep-crypto-network').value;
+      document.getElementById('dep-crypto-target-address').innerText = cryptoAddresses[net] || cryptoAddresses.TRC20;
+    };
+
+    window.handleDepositSubmit = async function(e, channel) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById(channel === 'momo' ? 'dep-momo-usd-amount' : 'dep-crypto-amount').value);
+      const txId = document.getElementById(channel === 'momo' ? 'dep-momo-tx-id' : 'dep-crypto-tx-id').value.trim();
+
+      if (amount < systemSettings.minDeposit || amount > systemSettings.maxDeposit) {
+        showToast(`Deposit is out of limits ($${systemSettings.minDeposit} - $${systemSettings.maxDeposit})`, "error");
+        return;
+      }
+
+      showToast("Logging deposit request...", "info");
+
+      const txObj = {
+        id: 'TX' + Math.floor(100000 + Math.random() * 900000),
+        type: 'deposit',
+        amount: amount,
+        channel: channel,
+        txId: txId,
+        reference: channel === 'momo' ? document.getElementById('dep-momo-acc-ref').innerText : null,
+        timestamp: Date.now(),
+        status: 'pending',
+        authUid: userDetails.authUid,
+        username: userDetails.username,
+        description: `Deposit via ${channel.toUpperCase()}`
+      };
+
+      if (isOfflineFallback) {
+        localDatabase.transactions.push(txObj);
+        localDatabase.approvals.push(txObj);
+        saveLocalDb();
+
+        loadUserTransactions();
+        syncSandboxLedgers();
+        closeModal('deposit-modal');
+        document.getElementById('dep-momo-submit-form').reset();
+        document.getElementById('dep-crypto-submit-form').reset();
+        showToast("Proof uploaded! Approve it instantly in the Floating Admin Simulator at bottom right.", "success");
+        switchTab('transactions');
+      } else {
+        try {
+          const docRef = await addDoc(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'transactions'), txObj);
+          await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'deposits_queue', docRef.id), txObj);
+
+          closeModal('deposit-modal');
+          showToast("Deposit request uploaded successfully.", "success");
+        } catch (e) {
+          isOfflineFallback = true;
+          handleDepositSubmit(e, channel);
+        }
+      }
+    };
+
+    // ----------------------------------------------------
+    // WITHDRAWALS EXECUTION WITH CALENDAR RULES
+    // Fridays & Saturdays ONLY; 1st Friday is fee-free.
+    // ----------------------------------------------------
+    window.calculateWithdrawFee = function(val) {
+      const parsed = parseFloat(val) || 0;
+      
+      const now = new Date();
+      const dayOfWeek = now.getDay(); // 0-6
+      const dateNum = now.getDate(); // 1-31
+
+      // 1st Friday Waived check
+      let isFirstFriday = (dayOfWeek === 5 && dateNum <= 7);
+
+      // Sandbox overrides
+      const overrideFirstFriday = document.getElementById('sandbox-force-first-friday').checked;
+      if (overrideFirstFriday) {
+        isFirstFriday = true;
+      }
+
+      const rate = isFirstFriday ? 0.0 : 0.03;
+      const sur = parsed * rate;
+
+      document.getElementById('withdraw-current-fee-rate').innerText = isFirstFriday ? "0.00% (Monthly Free Window!)" : "3.00%";
+      document.getElementById('withdraw-surcharge-val').innerText = `$${sur.toFixed(2)}`;
+      document.getElementById('withdraw-final-credit-val').innerText = `$${Math.max(0, parsed - sur).toFixed(2)}`;
+    };
+
+    window.handleWithdrawalSubmit = async function(e) {
+      e.preventDefault();
+      const idx = document.getElementById('withdraw-wallet-bind').value;
+      const amount = parseFloat(document.getElementById('withdraw-amount-input').value);
+      const pass = document.getElementById('withdraw-confirm-password').value;
+
+      if (idx === "") {
+        showToast("Link payout destination wallet first.", "error");
+        return;
+      }
+      if (pass !== userDetails.password) {
+        showToast("Security password check failed.", "error");
+        return;
+      }
+
+      // ----------------------------------------------------
+      // TIME CHECK WINDOW RULES (FRI / SAT ONLY)
+      // ----------------------------------------------------
+      const now = new Date();
+      const dayOfWeek = now.getDay(); // 0 = Sun, 5 = Fri, 6 = Sat
+      const isAllowedDay = (dayOfWeek === 5 || dayOfWeek === 6);
+      
+      const sandboxBypass = document.getElementById('sandbox-override-days').checked;
+
+      if (!isAllowedDay && !sandboxBypass) {
+        showToast("Payout processes are active strictly on Fridays and Saturdays.", "error");
+        return;
+      }
+
+      const totalWithdrawable = (userBalances.minedBalance || 0) + (userBalances.purchaseBalance || 0) + (userBalances.stakeBalance || 0);
+      if (amount < systemSettings.minWithdraw || amount > systemSettings.maxWithdraw) {
+        showToast(`Withdrawal out of threshold range ($${systemSettings.minWithdraw} - $${systemSettings.maxWithdraw}).`, "error");
+        return;
+      }
+      if (amount > totalWithdrawable) {
+        showToast("Insufficient payout balances available.", "error");
+        return;
+      }
+
+      showToast("Dispatching payout routing request...", "info");
+
+      let remaining = amount;
+      let mined = userBalances.minedBalance || 0;
+      let plan = userBalances.purchaseBalance || 0;
+      let stake = userBalances.stakeBalance || 0;
+
+      if (mined >= remaining) {
+        mined -= remaining;
+        remaining = 0;
+      } else {
+        remaining -= mined;
+        mined = 0;
+      }
+
+      if (remaining > 0 && plan >= remaining) {
+        plan -= remaining;
+        remaining = 0;
+      } else if (remaining > 0) {
+        remaining -= plan;
+        plan = 0;
+      }
+
+      if (remaining > 0 && stake >= remaining) {
+        stake -= remaining;
+        remaining = 0;
+      }
+
+      userBalances.minedBalance = mined;
+      userBalances.purchaseBalance = plan;
+      userBalances.stakeBalance = stake;
+
+      const outlet = linkedWallets[idx];
+      const dateNum = now.getDate();
+      let isFirstFriday = (dayOfWeek === 5 && dateNum <= 7);
+
+      // Force first Friday bypass in simulator
+      if (document.getElementById('sandbox-force-first-friday').checked) {
+        isFirstFriday = true;
+      }
+
+      const surchargeRate = isFirstFriday ? 0.0 : 0.03;
+      const feeAmount = amount * surchargeRate;
+
+      const payoutProposal = {
+        id: 'TX' + Math.floor(100000 + Math.random() * 900000),
+        type: 'withdrawal',
+        amount: amount,
+        fee: feeAmount,
+        finalCredit: amount - feeAmount,
+        destination: outlet.address,
+        timestamp: Date.now(),
+        status: 'pending',
+        authUid: userDetails.authUid,
+        username: userDetails.username,
+        description: `Withdrawal payout route`
+      };
+
+      if (isOfflineFallback) {
+        localDatabase.transactions.push(payoutProposal);
+        localDatabase.approvals.push(payoutProposal);
+        saveLocalDb();
+
+        renderBalances();
+        loadUserTransactions();
+        syncSandboxLedgers();
+        closeModal('withdraw-modal');
+        document.getElementById('withdraw-action-form').reset();
+        showToast("Payout proposal recorded! Approve it inside the Floating Admin Simulator.", "success");
+        switchTab('transactions');
+      } else {
+        try {
+          const balancesRef = doc(db, 'artifacts', appId, 'users', userDetails.authUid, 'balances', 'current');
+          await updateDoc(balancesRef, { minedBalance: mined, purchaseBalance: plan, stakeBalance: stake });
+
+          const docRef = await addDoc(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'transactions'), payoutProposal);
+          await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'withdrawals_queue', docRef.id), payoutProposal);
+
+          closeModal('withdraw-modal');
+          showToast("Payout request recorded in security servers.", "success");
+        } catch (e) {
+          isOfflineFallback = true;
+          handleWithdrawalSubmit(e);
+        }
+      }
+    };
+
+    // ----------------------------------------------------
+    // AUDITING LEDGER SYSTEM
+    // ----------------------------------------------------
+    let currentLogFilter = 'all';
+    window.filterTransactions = function(cat) {
+      currentLogFilter = cat;
+      const bts = ['all', 'deposit', 'withdrawal', 'purchase'];
+      bts.forEach(b => {
+        document.getElementById(`tx-filter-${b}`).className = `flex-1 py-1.5 rounded-lg text-xs font-bold ${b === cat ? 'bg-yellow-500 text-slate-950 shadow' : 'text-slate-400'}`;
+      });
+      renderTransactionList();
+    };
+
+    window.loadUserTransactions = function() {
+      if (!userDetails) return;
+      if (isOfflineFallback) {
+        allTransactions = localDatabase.transactions.filter(t => t.authUid === userDetails.authUid);
+        renderTransactionList();
+      } else {
+        try {
+          onSnapshot(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'transactions'), (snap) => {
+            allTransactions = [];
+            snap.forEach(d => { allTransactions.push({ id: d.id, ...d.data() }); });
+            allTransactions.sort((a,b) => b.timestamp - a.timestamp);
+            renderTransactionList();
+          });
+        } catch (e) {
+          isOfflineFallback = true;
+          loadUserTransactions();
+        }
+      }
+    };
+
+    function renderTransactionList() {
+      let filtered = allTransactions;
+      if (currentLogFilter !== 'all') {
+        filtered = allTransactions.filter(t => t.type === currentLogFilter);
+      }
+
+      let html = '';
+      if (filtered.length === 0) {
+        document.getElementById('transaction-logs-list').innerHTML = '<p class="text-xs text-slate-500 text-center py-12">No transactions match active filter matrices.</p>';
+        return;
+      }
+
+      filtered.forEach(tx => {
+        const isPlus = tx.type === 'earn' || tx.type === 'claim' || (tx.type === 'deposit' && tx.status === 'completed');
+        const col = tx.status === 'pending' ? 'text-yellow-500' : isPlus ? 'text-green-400' : 'text-slate-300';
+        const sign = isPlus ? '+' : '-';
+        const icon = tx.type === 'deposit' ? 'fa-circle-chevron-down' : tx.type === 'withdrawal' ? 'fa-circle-chevron-up' : 'fa-gear';
+
+        html += `
+          <div class="themed-card border p-4 rounded-2xl flex justify-between items-center text-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="p-2 bg-slate-950/20 dark:bg-slate-950 border border-slate-250 dark:border-slate-850 rounded-xl text-yellow-500">
+                <i class="fa-solid ${icon}"></i>
+              </div>
+              <div>
+                <p class="font-extrabold">${tx.description || tx.type.toUpperCase()}</p>
+                <p class="text-[9px] text-slate-500 font-mono">${new Date(tx.timestamp).toLocaleString()}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-black text-sm ${col}">${sign}$${tx.amount.toFixed(2)}</p>
+              <span class="inline-block text-[8px] font-black uppercase px-2 py-0.5 rounded ${tx.status === 'pending' ? 'bg-yellow-500/10 text-yellow-500' : tx.status === 'completed' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-500'}">${tx.status}</span>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('transaction-logs-list').innerHTML = html;
+    }
+
+    // ----------------------------------------------------
+    // ADMINISTRATIVE SIMULATOR CONTROLS (SANDBOX)
+    // ----------------------------------------------------
+    window.toggleSandbox = function() {
+      const p = document.getElementById('sandbox-panel');
+      p.classList.toggle('hidden');
+    };
+
+    window.sandboxAdjustBalance = function(field, amount) {
+      if (!userDetails) {
+        showToast("Activate a secure user session first to apply modifications.", "error");
+        return;
+      }
+      userBalances[field] = (userBalances[field] || 0) + amount;
+      renderBalances();
+      showToast(`Emulated portfolio balance updated: Added +$${amount} to ${field}.`, "success");
+    };
+
+    window.updateGlobalRate = function(val) {
+      const parsed = parseFloat(val) || 13;
+      systemSettings.rate = parsed;
+      document.getElementById('momo-rate-indicator').innerText = `1 USD = ${parsed.toFixed(2)} GHS`;
+      showToast(`Conversion index standard modified to 1 USD = ${parsed} GHS`, "success");
+    };
+
+    window.syncSandboxLedgers = function() {
+      const list = document.getElementById('sandbox-approvals-list');
+      const pending = localDatabase.approvals.filter(a => a.status === 'pending');
+
+      if (pending.length === 0) {
+        list.innerHTML = '<p class="text-slate-500 italic text-center py-2">No pending transactions currently in queue.</p>';
+        return;
+      }
+
+      let html = '';
+      pending.forEach((tx) => {
+        html += `
+          <div class="bg-slate-900 border border-slate-850 p-2 rounded-xl flex justify-between items-center text-[10px] gap-2">
+            <div>
+              <p class="font-extrabold text-slate-300 capitalize">${tx.type} Proposal</p>
+              <p class="text-slate-500 font-semibold">$${tx.amount.toFixed(2)} - ${tx.username}</p>
+            </div>
+            <div class="flex gap-1.5 flex-shrink-0">
+              <button onclick="sandboxApproveTx('${tx.id}', true)" class="bg-green-600 hover:bg-green-500 text-slate-950 font-black px-1.5 py-1 rounded transition-all">OK</button>
+              <button onclick="sandboxApproveTx('${tx.id}', false)" class="bg-red-600 hover:bg-red-500 text-white font-bold px-1.5 py-1 rounded transition-all">X</button>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    };
+
+    window.sandboxApproveTx = function(txId, approve) {
+      const proposalIdx = localDatabase.approvals.findIndex(a => a.id === txId);
+      if (proposalIdx === -1) return;
+
+      const proposal = localDatabase.approvals[proposalIdx];
+      proposal.status = approve ? 'completed' : 'rejected';
+
+      const statementIdx = localDatabase.transactions.findIndex(t => t.id === txId);
+      if (statementIdx !== -1) {
+        localDatabase.transactions[statementIdx].status = proposal.status;
+      }
+
+      if (approve) {
+        const targetUser = localDatabase.users[proposal.username];
+        if (targetUser) {
+          if (proposal.type === 'deposit') {
+            targetUser.balances.depositBalance = (targetUser.balances.depositBalance || 0) + proposal.amount;
+          }
+        }
+      } else {
+        if (proposal.type === 'withdrawal') {
+          const targetUser = localDatabase.users[proposal.username];
+          if (targetUser) {
+            targetUser.balances.minedBalance = (targetUser.balances.minedBalance || 0) + proposal.amount;
+          }
+        }
+      }
+
+      localDatabase.approvals.splice(proposalIdx, 1);
+      saveLocalDb();
+
+      if (userDetails && userDetails.username === proposal.username) {
+        userBalances = localDatabase.users[proposal.username].balances;
+        renderBalances();
+        loadUserTransactions();
+      }
+
+      syncSandboxLedgers();
+      showToast(`Transaction proposal response saved: ${proposal.status.toUpperCase()}`, "success");
+    };
+
+    window.runYieldCalculation = function() {
+      const selVal = document.getElementById('calc-pool').value;
+      const amount = parseFloat(document.getElementById('calc-amount').value) || 0;
+      
+      const rate = parseFloat(selVal.split('-')[0]);
+      const yields = amount * rate;
+      const total = amount + yields;
+
+      document.getElementById('calc-result-yield').innerText = `$${yields.toFixed(2)}`;
+      document.getElementById('calc-result-total').innerText = `$${total.toFixed(2)}`;
+    };
+
+    window.copyReferralLink = function() {
+      const link = document.getElementById('referral-link-display').innerText;
+      copyToClipboard(link);
+      showToast("Affiliate referral link copied!", "success");
+    };
+
+    window.copyUID = function() {
+      const uid = document.getElementById('profile-uid').innerText;
+      copyToClipboard(uid);
+      showToast("Identity UID coordinates copied!", "success");
+    };
+
+    window.copyDepositField = function(elId, label) {
+      const txt = document.getElementById(elId).innerText;
+      copyToClipboard(txt);
+      showToast(`${label} copied!`, "success");
+    };
+
+    function copyToClipboard(text) {
+      const temp = document.createElement('textarea');
+      temp.value = text;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+    }
+
+  </script>
+
+  <!-- INTERACTIVE DOM MANIPULATION -->
+  <script>
+    function showToast(message, type = "info") {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const styling = {
+        success: "bg-green-600/95 border-green-500 shadow-green-500/10",
+        error: "bg-red-600/95 border-red-500 shadow-red-500/10",
+        info: "bg-blue-600/95 border-blue-500 shadow-blue-500/10"
+      };
+
+      toast.className = `p-4 rounded-2xl shadow-xl border text-xs font-semibold text-white transform translate-y-3 opacity-0 transition-all duration-350 pointer-events-auto backdrop-blur-md ${styling[type] || styling.info}`;
+      toast.innerHTML = `
+        <div class="flex items-center gap-2.5">
+          <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-info'}"></i>
+          <span>${message}</span>
+        </div>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => { toast.classList.remove('translate-y-3', 'opacity-0'); }, 50);
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-3', 'opacity-0');
+        setTimeout(() => { toast.remove(); }, 350);
+      }, 3800);
+    }
+
+    // Dark Mode / Light Mode Theme Toggle Logic
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-toggle-icon');
+
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        themeIcon.className = 'fa-solid fa-moon text-blue-600';
+        showToast("Light Theme Activated", "info");
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        themeIcon.className = 'fa-solid fa-sun text-yellow-500';
+        showToast("Dark Theme Activated", "info");
+      }
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function switchAuthTab(tab) {
+      const loginTab = document.getElementById('tab-login');
+      const regTab = document.getElementById('tab-register');
+      const loginForm = document.getElementById('login-form');
+      const regForm = document.getElementById('register-form');
+
+      if (tab === 'login') {
+        loginTab.className = "flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-yellow-500 text-slate-950 shadow";
+        regTab.className = "flex-1 py-3 rounded-xl font-bold text-sm text-slate-400 hover:text-white transition-all";
+        loginForm.classList.remove('hidden');
+        regForm.classList.add('hidden');
+      } else {
+        regTab.className = "flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-yellow-500 text-slate-950 shadow";
+        loginTab.className = "flex-1 py-3 rounded-xl font-bold text-sm text-slate-400 hover:text-white transition-all";
+        regForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+      }
+    }
+
+    function togglePasswordVisibility(id, btn) {
+      const input = document.getElementById(id);
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    function switchTab(tabId) {
+      const tabs = ['home', 'activities', 'crew', 'transactions', 'assets'];
+      tabs.forEach(t => {
+        const pane = document.getElementById(`tab-content-${t}`);
+        const button = document.getElementById(`nav-tab-${t}`);
+        if (t === tabId) {
+          pane.classList.remove('hidden');
+          button.className = "flex flex-col items-center gap-1 py-1 px-3 text-yellow-500 transition-all duration-300";
+        } else {
+          pane.classList.add('hidden');
+          button.className = "flex flex-col items-center gap-1 py-1 px-3 text-slate-400 hover:text-yellow-500 transition-all duration-300";
+        }
+      });
+    }
+
+    function toggleActivitySubTab(sub) {
+      const pBtn = document.getElementById('act-tab-products');
+      const eBtn = document.getElementById('act-tab-earns');
+      const pSec = document.getElementById('act-sub-products');
+      const eSec = document.getElementById('act-sub-earns');
+
+      if (sub === 'products') {
+        pBtn.className = "flex-1 py-2.5 rounded-xl font-bold text-xs transition-all bg-yellow-500 text-slate-950";
+        eBtn.className = "flex-1 py-2.5 rounded-xl font-bold text-xs text-slate-400 hover:text-white transition-all";
+        pSec.classList.remove('hidden');
+        eSec.classList.add('hidden');
+      } else {
+        eBtn.className = "flex-1 py-2.5 rounded-xl font-bold text-xs transition-all bg-yellow-500 text-slate-950";
+        pBtn.className = "flex-1 py-2.5 rounded-xl font-bold text-xs text-slate-400 hover:text-white transition-all";
+        eSec.classList.remove('hidden');
+        pSec.classList.add('hidden');
+      }
+    }
+
+    function toggleProductFilter(filter) {
+      const groups = ['stake', 'plan', 'mining'];
+      groups.forEach(g => {
+        const sec = document.getElementById(`prod-group-${g}`);
+        const btn = document.getElementById(`btn-filter-${g}`);
+        if (g === filter) {
+          sec.classList.remove('hidden');
+          btn.className = "py-2.5 rounded-xl text-[10px] font-bold bg-blue-600 text-white transition-all";
+        } else {
+          sec.classList.add('hidden');
+          btn.className = "py-2.5 rounded-xl text-[10px] font-bold bg-slate-900 text-slate-400 hover:text-white transition-all";
+        }
+      });
+    }
+
+    function toggleDepositType(type) {
+      const mBtn = document.getElementById('dep-tab-momo');
+      const cBtn = document.getElementById('dep-tab-crypto');
+      const mSec = document.getElementById('dep-sub-momo');
+      const cSec = document.getElementById('dep-sub-crypto');
+
+      if (type === 'momo') {
+        mBtn.className = "flex-1 py-2 rounded-lg text-xs font-bold bg-yellow-500 text-slate-950 transition-all";
+        cBtn.className = "flex-1 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all";
+        mSec.classList.remove('hidden');
+        cSec.classList.add('hidden');
+        window.renderMomoDestinationAccount();
+      } else {
+        cBtn.className = "flex-1 py-2 rounded-lg text-xs font-bold bg-yellow-500 text-slate-950 transition-all";
+        mBtn.className = "flex-1 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all";
+        cSec.classList.remove('hidden');
+        mSec.classList.add('hidden');
+        window.renderCryptoDestinationAddress();
+      }
+    }
+
+    window.openProfileModal = () => openModal('profile-modal');
+    window.openSupportModal = () => openModal('support-modal');
+    window.openAddWalletModal = () => openModal('add-wallet-modal');
+    window.openCalcModal = () => { openModal('calc-modal'); window.runYieldCalculation(); };
+    window.openDepositModal = () => { openModal('deposit-modal'); toggleDepositType('momo'); };
+    window.openWithdrawModal = () => { openModal('withdraw-modal'); window.calculateWithdrawFee(0); };
+  </script>
+</body>
+</html>

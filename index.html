@@ -237,11 +237,11 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Full Name</label>
-            <input type="text" id="reg-name" required placeholder="John Doe" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
+            <input type="text" id="reg-name" required placeholder="John Mensah" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Username</label>
-            <input type="text" id="reg-username" required placeholder="johndoe12" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
+            <input type="text" id="reg-username" required placeholder="johnmensah12" class="w-full input-field border focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-sm focus:outline-none transition-all">
           </div>
         </div>
 
@@ -306,16 +306,50 @@
         </button>
       </form>
 
-      <!-- Support Details -->
+      <!-- Support details inside auth container -->
       <div class="border-t border-slate-800/80 mt-8 pt-6 space-y-4">
         <div class="flex justify-between items-center text-xs text-slate-400 bg-slate-950/40 p-3.5 rounded-xl border border-slate-900">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-clock text-yellow-500"></i>
             <div>
-              <p class="font-semibold text-slate-200">Customer Support Hours</p>
+              <p class="font-semibold text-slate-200">Live Support Window</p>
               <p class="text-[10px]">Mon - Sat: 9:00am - 5:30pm GMT</p>
             </div>
           </div>
+          <div class="relative group">
+  <button
+    class="bg-blue-600/20 text-blue-400 border border-blue-500/20 px-2.5 py-1 rounded-md text-[10px] font-bold hover:bg-blue-600 hover:text-white transition-all inline-flex items-center">
+    <i class="fa-solid fa-download mr-1"></i> DOWNLOAD APP
+    <i class="fa-solid fa-chevron-down ml-1 text-[8px]"></i>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div class="absolute right-0 mt-2 w-44 bg-slate-900 border border-slate-700 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2">
+
+    <!-- Android Button -->
+    <a href="https://median.co/share/odprblb#apk"
+       target="_blank"
+       class="flex items-center justify-center gap-2 w-full mb-2 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-xs font-bold transition-all">
+      <i class="fa-brands fa-android"></i>
+      Android
+    </a>
+
+    <!-- iOS Button -->
+    <button
+      class="flex items-center justify-center gap-2 w-full bg-slate-700 text-slate-300 py-2 rounded-lg text-xs font-bold cursor-not-allowed">
+      <i class="fa-brands fa-apple"></i>
+      iOS (Coming Soon)
+    </button>
+
+  </div>
+</div>
+        </div>
+
+        <div class="flex justify-center gap-4 text-xs font-semibold">
+          <a href="https://whatsapp.com/channel/0029VbDTgAo6RGJMid9hnb31" target="_blank" class="text-green-400 hover:underline flex items-center gap-1.5">
+            <i class="fa-brands fa-whatsapp text-sm animate-pulse"></i>
+            <span>Join Official Telegram/WhatsApp Channel</span>
+          </a>
         </div>
       </div>
 
@@ -457,6 +491,7 @@
             <p class="text-[10px] text-slate-400 mt-1">Estimate maturity cycles dynamically.</p>
           </div>
         </div>
+  
 
         <!-- PLATFORM STATISTICS & ANALYTICS -->
         <div class="themed-card border rounded-3xl p-4 space-y-4">
@@ -500,7 +535,7 @@
                 <i class="fa-solid fa-lock"></i> Locked Vault Pools
               </h4>
               <p>Allocate capital into long-term vault structures to claim compounded daily interest yields.</p>
-              <p class="text-[10px] text-yellow-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> Min: $100 | Max: $10,000</p>
+              <p class="text-[10px] text-yellow-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> Min: $50 | Max: $10,000</p>
             </div>
             <div class="space-y-3" id="stake-cards-list"></div>
           </div>
@@ -683,7 +718,7 @@
           <div id="bound-wallets-display" class="space-y-2 text-xs"></div>
 
           <button id="btn-add-wallet-open" onclick="openAddWalletModal()" class="w-full bg-slate-950 border border-slate-800 hover:border-yellow-500 text-yellow-500 font-bold py-3 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-plus text-[10px]"></i> Link Outflow Route
+            <i class="fa-solid fa-plus text-[10px]"></i> ADD WALLET
           </button>
         </div>
 
@@ -744,7 +779,7 @@
   <!-- MODALS -->
 
   <!-- MODAL: PREMIUM PRODUCT & NODE CONFIRMATION -->
-  <div id="product-confirm-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+  <div id="product-confirm-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-none z-50 flex items-center justify-center p-4 hidden text-slate-200">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <h3 id="prod-conf-heading" class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Verify Activation</h3>
@@ -792,7 +827,7 @@
   </div>
 
   <!-- MODAL: PROFILE & KYC STATUS -->
-  <div id="profile-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+  <div id="profile-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-none z-50 flex items-center justify-center p-4 hidden text-slate-200">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Private Credentials</h3>
@@ -839,7 +874,7 @@
   </div>
 
   <!-- MODAL: NOTIFICATIONS -->
-  <div id="notifications-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+  <div id="notifications-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-none z-50 flex items-center justify-center p-4 hidden text-slate-200">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Inbox Notifications</h3>
@@ -855,23 +890,34 @@
     </div>
   </div>
 
-  <!-- MODAL: SUPPORT -->
-  <div id="support-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+ <!-- MODAL: SUPPORT LINKS -->
+  <div id="support-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-none z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Support Helpdesk</h3>
+        <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Direct Desk Help</h3>
         <button onclick="closeModal('support-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
       
-      <p class="text-xs text-slate-300 leading-relaxed">Reach out to our secure support channels during official working hours.</p>
+      <p class="text-xs text-slate-300 leading-relaxed">Reach out directly to any of the active support channels on WhatsApp during standard working hours (9:00am - 5:30pm GMT).</p>
       
       <div class="space-y-2.5">
         <a href="https://wa.me/233561080160" target="_blank" class="flex items-center justify-between bg-slate-950 border border-slate-800 hover:border-green-500 p-3 rounded-2xl transition-all">
-          <div class="flex items-center gap-2.5 text-xs">
+          <div class="flex items-center gap-2.5">
             <i class="fa-brands fa-whatsapp text-green-500 text-lg"></i>
             <div class="text-left">
-              <p class="font-bold text-slate-200">Customer Desk 1</p>
+              <p class="text-xs font-bold text-slate-200">Support Desk 1</p>
               <p class="text-[10px] text-slate-400">+233 561 080 160</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+        </a>
+
+        <a href="https://wa.me/233207659671" target="_blank" class="flex items-center justify-between bg-slate-950 border border-slate-800 hover:border-green-500 p-3 rounded-2xl transition-all">
+          <div class="flex items-center gap-2.5">
+            <i class="fa-brands fa-whatsapp text-green-500 text-lg"></i>
+            <div class="text-left">
+              <p class="text-xs font-bold text-slate-200">Support Desk 2</p>
+              <p class="text-[10px] text-slate-400">0207659671</p>
             </div>
           </div>
           <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
@@ -881,7 +927,7 @@
   </div>
 
   <!-- MODAL: CALCULATOR -->
-  <div id="calc-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+  <div id="calc-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-none z-50 flex items-center justify-center p-4 hidden text-slate-200">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <h3 class="font-extrabold text-sm text-teal-400 uppercase tracking-widest">Yield Estimator</h3>
@@ -920,7 +966,7 @@
   </div>
 
   <!-- MODAL: BIND NEW WALLET -->
-  <div id="add-wallet-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+  <div id="add-wallet-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-none z-50 flex items-center justify-center p-4 hidden text-slate-200">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
       <div class="flex justify-between items-center">
         <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Bind Destination</h3>
@@ -931,8 +977,8 @@
         <div>
           <label class="block text-slate-400 font-bold mb-1.5">Select Network Channel</label>
           <select id="wallet-type-select" onchange="toggleWalletFormInputs(this.value)" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-slate-200 focus:outline-none">
-            <option value="momo" selected>Mobile Money Channel (Local)</option>
-            <option value="crypto">USDT Target / Blockchain</option>
+            <option value="momo" selected>MOBILE MONEY</option>
+            <option value="crypto">BLOCKCHAIN ADDRESS</option>
           </select>
         </div>
 
@@ -941,14 +987,14 @@
           <div>
             <label class="block text-slate-400 font-bold mb-1">Carrier Network Option</label>
             <select id="wallet-momo-network" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-slate-200 focus:outline-none">
-              <option value="MTN">MTN MoMo</option>
-              <option value="TELECEL">Telecel Cash</option>
-              <option value="AIRTELTIGO">AirtelTigo</option>
+              <option value="MTN">MTN  MoMo</option>
+              <option value="TELECEL">Telecel  Cash</option>
+              <option value="AIRTELTIGO">AirtelTigo  Cash</option>
             </select>
           </div>
           <div>
             <label class="block text-slate-400 font-bold mb-1">Account Registered Name</label>
-            <input type="text" id="wallet-momo-name" placeholder="John Doe" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-2.5 px-3.5 focus:outline-none text-slate-200">
+            <input type="text" id="wallet-momo-name" placeholder="John Mensah" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-2.5 px-3.5 focus:outline-none text-slate-200">
           </div>
           <div>
             <label class="block text-slate-400 font-bold mb-1">Mobile Wallet Number</label>
@@ -961,9 +1007,10 @@
           <div>
             <label class="block text-slate-400 font-bold mb-1">Target Blockchain</label>
             <select id="wallet-crypto-network" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-2.5 px-3.5 text-slate-200 focus:outline-none">
-              <option value="TRC20">TRON Network (TRC20 USDT)</option>
-              <option value="BEP20">BNB Chain (BEP20 USDT)</option>
-              <option value="ERC20">Ethereum Network (ERC20 USDT)</option>
+               <option value="ERC20">Ethereum (ERC20)</option>
+            <option value="ARBITRUM">Arbitrum One</option>
+            <option value="APTOS">Aptos Network</option>
+            <option value="BEP20">BNB Smart Chain (BEP20)</option>
             </select>
           </div>
           <div>
@@ -978,14 +1025,14 @@
         </div>
 
         <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-3 rounded-xl transition-all">
-          Link Cashout Route
+          BIND WALLET
         </button>
       </form>
     </div>
   </div>
 
   <!-- MODAL: DEPOSIT TARGET HUB -->
-  <div id="deposit-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+  <div id="deposit-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-none z-50 flex items-center justify-center p-4 hidden text-slate-200">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-4 overflow-y-auto max-h-[90vh]">
       <div class="flex justify-between items-center pb-2 border-b border-slate-800">
         <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Deposit Hub</h3>
@@ -1009,9 +1056,9 @@
         <div>
           <label class="block text-slate-400 font-bold mb-1">Select Local Provider Channel</label>
           <select id="dep-momo-carrier" onchange="renderMomoDestinationAccount()" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-slate-200 focus:outline-none">
-            <option value="MTN" selected>MTN MoMo Router Account</option>
-            <option value="TELECEL">Telecel Cash Router Account</option>
-            <option value="AIRTELTIGO">AirtelTigo Money Router Account</option>
+            <option value="MTN" selected>MTN MoMo Account</option>
+            <option value="TELECEL">Telecel Cash Account</option>
+            <option value="AIRTELTIGO">AirtelTigo Money Account</option>
           </select>
         </div>
 
@@ -1071,10 +1118,11 @@
         <div>
           <label class="block text-slate-400 font-bold mb-1">Select Network Channel</label>
           <select id="dep-crypto-network" onchange="renderCryptoDestinationAddress()" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 text-slate-200 focus:outline-none">
-            <option value="TRC20" selected>TRON Network (TRC20 USDT)</option>
-            <option value="ARBITRUM">Arbitrum (USDT)</option>
-            <option value="BEP20">Binance Smart Chain (BEP20 USDT)</option>
-            <option value="ERC20">Ethereum Network (ERC20 USDT)</option>
+            <option value="TRC20" selected>TRON (TRC20)</option>
+            <option value="ARBITRUM">Arbitrum One</option>
+            <option value="APTOS">Aptos Network</option>
+            <option value="BEP20">BNB Smart Chain (BEP20)</option>
+            <option value="ERC20">Ethereum (ERC20)</option>
           </select>
         </div>
 
@@ -1110,7 +1158,7 @@
   </div>
 
   <!-- MODAL: WITHDRAWALS -->
-  <div id="withdraw-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+  <div id="withdraw-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-none z-50 flex items-center justify-center p-4 hidden text-slate-200">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
       <div class="flex justify-between items-center">
         <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Request Cashout</h3>
@@ -1175,7 +1223,7 @@
   </div>
 
   <!-- MODAL: LOCKED VAULT STAKING CONFIRMATION -->
-  <div id="stake-confirm-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden text-slate-200">
+  <div id="stake-confirm-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-none z-50 flex items-center justify-center p-4 hidden text-slate-200">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <h3 class="font-extrabold text-sm text-yellow-500 uppercase tracking-widest">Confirm Vault Lock</h3>
@@ -1199,7 +1247,7 @@
       <form id="stake-commit-form" onsubmit="handleStakeCommit(event)" class="space-y-4 text-xs">
         <div>
           <label class="block text-slate-400 font-bold mb-1">Staking Commitment Amount ($)</label>
-          <input type="number" id="stake-commit-amount" required min="100" max="10000" placeholder="100" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 focus:outline-none text-slate-200">
+          <input type="number" id="stake-commit-amount" required min="50" max="10000" placeholder="Minimum: $50" class="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500 rounded-xl py-3 px-4 focus:outline-none text-slate-200">
           <p class="text-[9px] text-slate-400 mt-1">Locks both Deposit and Bonus balance accounts.</p>
         </div>
 
@@ -1510,7 +1558,7 @@
         document.getElementById('profile-username').innerText = userDetails.username;
         document.getElementById('profile-email').innerText = userDetails.email;
         document.getElementById('profile-phone').innerText = userDetails.phone;
-        document.getElementById('referral-link-display').innerText = `https://www.TriYieldCapital.com?ref=${userDetails.username}`;
+        document.getElementById('referral-link-display').innerText = `https://www.TriYieldCapital.site?ref=${userDetails.username}`;
         document.getElementById('sandbox-username').innerText = userDetails.username;
 
         renderBalances();
@@ -1858,7 +1906,7 @@
 
       const totalCap = (userBalances.depositBalance || 0) + (userBalances.bonusBalance || 0);
       if (totalCap < opt.amount) {
-        showToast("Insufficient capital, complete deposit transactions first.", "error");
+        showToast("INSUFFICIENT CAPITAL, COMPLETE DEPOSIT TRANSACTION FIRST.", "error");
         return;
       }
 
@@ -1944,8 +1992,8 @@
       const amount = parseFloat(document.getElementById('stake-commit-amount').value);
       const pass = document.getElementById('stake-commit-password').value;
 
-      if (amount < 100 || amount > 10000) {
-        showToast("Locked pool limits: Min $100 | Max $10,000", "error");
+      if (amount < 50 || amount > 10000) {
+        showToast("Locked pool limits: Min $50 | Max $10,000", "error");
         return;
       }
       if (pass !== userDetails.password) {
@@ -1955,7 +2003,7 @@
 
       const totalCap = (userBalances.depositBalance || 0) + (userBalances.bonusBalance || 0);
       if (totalCap < amount) {
-        showToast("Insufficient capital pools.", "error");
+        showToast("INSUFFICIENT CAPITAL POOLS.", "error");
         return;
       }
 
@@ -2353,30 +2401,56 @@
     }
 
     // ----------------------------------------------------
-    // DEPOSITS ROUTING
+    // DEPOSIT ROUTER & SUBMISSIONS ENGINE
     // ----------------------------------------------------
     const cryptoAddresses = {
       TRC20: "TGP4r9WQDcPvWbRG6cNMCKmK6RS1u6WwY4",
       ARBITRUM: "0xd44e5dcbff418ac924ca3e1f59fc58db3ea81ef9",
+      APTOS: "0xb629b1f7d35884eedb4d6ce8296a9cd679f7c24affe316fe196f8f0d468e6fe6",
       BEP20: "0xd44e5dcbff418ac924ca3e1f59fc58db3ea81ef9",
       ERC20: "0xd44e5dcbff418ac924ca3e1f59fc58db3ea81ef9"
     };
 
     window.renderMomoDestinationAccount = function() {
       const carrier = document.getElementById('dep-momo-carrier').value;
-      let name = "SHALOM DONKOR", num = "0537090034";
+      
+      // Automatic router for alternating accounts if carrier deposit totals exceed $1000
+      let baseName = "SHALOM DONKOR";
+      let baseNum = "0537090034";
 
-      if (carrier === "TELECEL") {
-        name = "MERCY QAUCIOE";
-        num = "0207659671";
+      if (carrier === "MTN") {
+        baseName = "SHALOM DONKOR";
+        baseNum = "0537090034";
+      } else if (carrier === "TELECEL") {
+        baseName = "MERCY QAUCIOE";
+        baseNum = "0207659671";
       } else if (carrier === "AIRTELTIGO") {
-        name = "GEORGINA MENSAH";
-        num = "0561080160";
+        baseName = "GEORGINA MENSAH";
+        baseNum = "0561080160";
       }
 
-      document.getElementById('dep-momo-acc-name').innerText = name;
-      document.getElementById('dep-momo-acc-num').innerText = num;
-      document.getElementById('dep-momo-acc-ref').innerText = 'TYC' + Math.floor(10000 + Math.random() * 90000) + 'X8';
+      // Dynamic switch router to alternative accounts if limit overflowed
+      const carrierDeposits = systemSettings[`daily_deposits_${carrier}`] || 0;
+      if (carrierDeposits > 1000) {
+        // Switch to alternate 1
+        if (carrier === "MTN") {
+          baseName = "ERNEST ERIC ADAMS";
+          baseNum = "0547121337";
+        } else if (carrier === "TELECEL") {
+          baseName = "ERNEST ERIC ADAMS";
+          baseNum = "0202745325";
+        } else if (carrier === "AIRTELTIGO") {
+          baseName = "ERNEST ERIC ADAMS";
+          baseNum = "0567191397";
+        }
+      }
+
+      document.getElementById('dep-momo-acc-name').innerText = baseName;
+      document.getElementById('dep-momo-acc-num').innerText = baseNum;
+
+      // Unique static randomized dynamic transaction reference code matching requirement
+      const randomRef = 'RTW' + Math.floor(10000 + Math.random() * 90000) + 'G5';
+      document.getElementById('dep-momo-acc-ref').innerText = randomRef;
     };
 
     window.calculateGhsEquivalent = function(usdVal) {
@@ -2392,55 +2466,62 @@
 
     window.handleDepositSubmit = async function(e, channel) {
       e.preventDefault();
+      
       const amount = parseFloat(document.getElementById(channel === 'momo' ? 'dep-momo-usd-amount' : 'dep-crypto-amount').value);
       const txId = document.getElementById(channel === 'momo' ? 'dep-momo-tx-id' : 'dep-crypto-tx-id').value.trim();
 
       if (amount < systemSettings.minDeposit || amount > systemSettings.maxDeposit) {
-        showToast(`Deposit is out of limits ($${systemSettings.minDeposit} - $${systemSettings.maxDeposit})`, "error");
+        showToast(`Deposit out of limit range ($${systemSettings.minDeposit} - $${systemSettings.maxDeposit})`, "error");
         return;
       }
 
-      showToast("Logging deposit request...", "info");
+      showToast("LOGGING SECURE DEPOSIT...", "info");
 
-      const txObj = {
-        id: 'TX' + Math.floor(100000 + Math.random() * 900000),
+      // Write Deposit transaction mapping pending admin verify (Rule 1 strict private paths)
+      const txRef = collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'transactions');
+      const docAdded = await addDoc(txRef, {
         type: 'deposit',
         amount: amount,
         channel: channel,
         txId: txId,
         reference: channel === 'momo' ? document.getElementById('dep-momo-acc-ref').innerText : null,
+        carrier: channel === 'momo' ? document.getElementById('dep-momo-carrier').value : document.getElementById('dep-crypto-network').value,
         timestamp: Date.now(),
-        status: 'pending',
+        status: 'pending' // pending admin approval before crediting balance
+      });
+
+      // Write matching public deposit request for Admin actions (Rule 1 strict public paths)
+      const adminDepositQueueRef = collection(db, 'artifacts', appId, 'public', 'data', 'deposits_queue');
+      await setDoc(doc(adminDepositQueueRef, docAdded.id), {
+        txId: txId,
+        userId: userDetails.uid,
         authUid: userDetails.authUid,
         username: userDetails.username,
-        description: `Deposit via ${channel.toUpperCase()}`
-      };
+        amount: amount,
+        channel: channel,
+        timestamp: Date.now(),
+        status: 'pending'
+      });
 
-      if (isOfflineFallback) {
-        localDatabase.transactions.push(txObj);
-        localDatabase.approvals.push(txObj);
-        saveLocalDb();
-
-        loadUserTransactions();
-        syncSandboxLedgers();
-        closeModal('deposit-modal');
-        document.getElementById('dep-momo-submit-form').reset();
-        document.getElementById('dep-crypto-submit-form').reset();
-        showToast("Proof uploaded! Approve it instantly in the Floating Admin Simulator at bottom right.", "success");
-        switchTab('transactions');
-      } else {
-        try {
-          const docRef = await addDoc(collection(db, 'artifacts', appId, 'users', userDetails.authUid, 'transactions'), txObj);
-          await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'deposits_queue', docRef.id), txObj);
-
-          closeModal('deposit-modal');
-          showToast("Deposit request uploaded successfully.", "success");
-        } catch (e) {
-          isOfflineFallback = true;
-          handleDepositSubmit(e, channel);
-        }
+      // Update daily counter locally inside settings doc (Rule 1 strict public paths)
+      if (channel === 'momo') {
+        const carrier = document.getElementById('dep-momo-carrier').value;
+        const currentSum = systemSettings[`daily_deposits_${carrier}`] || 0;
+        const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'global');
+        await updateDoc(settingsDocRef, {
+          [`daily_deposits_${carrier}`]: currentSum + amount
+        });
+        systemSettings[`daily_deposits_${carrier}`] = currentSum + amount;
       }
+
+      closeModal('deposit-modal');
+      document.getElementById('dep-momo-submit-form').reset();
+      document.getElementById('dep-crypto-submit-form').reset();
+      
+      showToast("Deposit receipt successfully dispatched! Awaiting Admin authorization.", "success");
+      switchTab('transactions');
     };
+
 
     // ----------------------------------------------------
     // WITHDRAWALS EXECUTION WITH CALENDAR RULES
@@ -2505,7 +2586,7 @@
         return;
       }
       if (amount > totalWithdrawable) {
-        showToast("Insufficient payout balances available.", "error");
+        showToast("INSUFFICIENT PAYOUT BALANCE AVAILABLE .", "error");
         return;
       }
 
@@ -2814,7 +2895,7 @@
         info: "bg-blue-600/95 border-blue-500 shadow-blue-500/10"
       };
 
-      toast.className = `p-4 rounded-2xl shadow-xl border text-xs font-semibold text-white transform translate-y-3 opacity-0 transition-all duration-350 pointer-events-auto backdrop-blur-md ${styling[type] || styling.info}`;
+      toast.className = `p-4 rounded-2xl shadow-xl border text-xs font-semibold text-white transform translate-y-3 opacity-0 transition-all duration-350 pointer-events-auto backdrop-blur-none ${styling[type] || styling.info}`;
       toast.innerHTML = `
         <div class="flex items-center gap-2.5">
           <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-info'}"></i>
@@ -2964,6 +3045,7 @@
     window.openCalcModal = () => { openModal('calc-modal'); window.runYieldCalculation(); };
     window.openDepositModal = () => { openModal('deposit-modal'); toggleDepositType('momo'); };
     window.openWithdrawModal = () => { openModal('withdraw-modal'); window.calculateWithdrawFee(0); };
+
   </script>
 </body>
 </html>
